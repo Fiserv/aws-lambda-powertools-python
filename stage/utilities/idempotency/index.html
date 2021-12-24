@@ -1312,11 +1312,14 @@ estimate the cost.</p>
 </div>
 <h3 id="idempotent_function-decorator">Idempotent_function decorator<a class="headerlink" href="#idempotent_function-decorator" title="Permanent link">&para;</a></h3>
 <p>Similar to <a href="#idempotent-decorator">idempotent decorator</a>, you can use <code>idempotent_function</code> decorator for any synchronous Python function.</p>
-<p>When using <code>idempotent_function</code>, you must tell us which keyword parameter in your function signature has the data we should use via <strong><code>data_keyword_argument</code></strong> - Such data must be JSON serializable.</p>
+<p>When using <code>idempotent_function</code>, you must tell us which keyword parameter in your function signature has the data we should use via <strong><code>data_keyword_argument</code></strong>.</p>
+<div class="admonition info">
+<p class="admonition-title">We support JSON serializable data, <a href="https://docs.python.org/3.7/library/dataclasses.html" target="_blank">Python Dataclasses</a>, <a href="../parser/" target="_blank">Parser/Pydantic Models</a>, and our <a href="../data_classes/" target="_blank">Event Source Data Classes</a>.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Make sure to call your decorated function using keyword arguments</p>
 </div>
-<div class="tabbed-set" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">app.py</label><div class="tabbed-content">
+<div class="tabbed-set" data-tabs="3:4"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">batch_sample.py</label><div class="tabbed-content">
 <p>This example also demonstrates how you can integrate with <a href="../batch/">Batch utility</a>, so you can process each record in an idempotent manner.</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -1344,37 +1347,43 @@ estimate the cost.</p>
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
-<span class="normal">27</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">uuid</span>
-
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.batch</span> <span class="kn">import</span> <span class="n">sqs_batch_processor</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">idempotent_function</span><span class="p">,</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.batch</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BatchProcessor</span><span class="p">,</span> <span class="n">EventType</span><span class="p">,</span>
+                                                   <span class="n">batch_processor</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.data_classes.sqs_event</span> <span class="kn">import</span> <span class="n">SQSRecord</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
+</span><span class="hll">    <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent_function</span><span class="p">)</span>
 </span>
 
+<span class="n">processor</span> <span class="o">=</span> <span class="n">BatchProcessor</span><span class="p">(</span><span class="n">event_type</span><span class="o">=</span><span class="n">EventType</span><span class="o">.</span><span class="n">SQS</span><span class="p">)</span>
 <span class="n">dynamodb</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;idem&quot;</span><span class="p">)</span>
 <span class="n">config</span> <span class="o">=</span>  <span class="n">IdempotencyConfig</span><span class="p">(</span>
-    <span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;messageId&quot;</span><span class="p">,</span>  <span class="c1"># see &quot;Choosing a payload subset for idempotency&quot; section</span>
+    <span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;messageId&quot;</span><span class="p">,</span>  <span class="c1"># see Choosing a payload subset section</span>
     <span class="n">use_local_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
+
+
+<span class="hll"><span class="nd">@idempotent_function</span><span class="p">(</span><span class="n">data_keyword_argument</span><span class="o">=</span><span class="s2">&quot;record&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">dynamodb</span><span class="p">)</span>
+</span><span class="k">def</span> <span class="nf">record_handler</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="n">SQSRecord</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]}</span>
+
 
 <span class="hll"><span class="nd">@idempotent_function</span><span class="p">(</span><span class="n">data_keyword_argument</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">dynamodb</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">dummy</span><span class="p">(</span><span class="n">arg_one</span><span class="p">,</span> <span class="n">arg_two</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span>
 
 
-<span class="hll"><span class="nd">@idempotent_function</span><span class="p">(</span><span class="n">data_keyword_argument</span><span class="o">=</span><span class="s2">&quot;record&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">dynamodb</span><span class="p">)</span>
-</span><span class="k">def</span> <span class="nf">record_handler</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]}</span>
-
-
-<span class="nd">@sqs_batch_processor</span><span class="p">(</span><span class="n">record_handler</span><span class="o">=</span><span class="n">record_handler</span><span class="p">)</span>
+<span class="nd">@batch_processor</span><span class="p">(</span><span class="n">record_handler</span><span class="o">=</span><span class="n">record_handler</span><span class="p">,</span> <span class="n">processor</span><span class="o">=</span><span class="n">processor</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="hll">    <span class="c1"># `data` parameter must be called as a keyword argument to work</span>
-</span>    <span class="n">dummy</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;universe&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">}</span>
+    <span class="c1"># `data` parameter must be called as a keyword argument to work</span>
+<span class="hll">    <span class="n">dummy</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;universe&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
+</span>    <span class="k">return</span> <span class="n">processor</span><span class="o">.</span><span class="n">response</span><span class="p">()</span>
 </code></pre></div>
 </td></tr></table>
 </div>
-<input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><label for="__tabbed_3_2">Example event</label><div class="tabbed-content">
+<input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><label for="__tabbed_3_2">Batch event</label><div class="tabbed-content">
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
 <span class="normal"> 3</span>
@@ -1429,6 +1438,138 @@ estimate the cost.</p>
 </code></pre></div>
 </td></tr></table>
 </div>
+<input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><label for="__tabbed_3_3">dataclass_sample.py</label><div class="tabbed-content">
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
+</span><span class="hll">    <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent_function</span><span class="p">)</span>
+</span>
+<span class="n">dynamodb</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;idem&quot;</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span>  <span class="n">IdempotencyConfig</span><span class="p">(</span>
+    <span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;order_id&quot;</span><span class="p">,</span>  <span class="c1"># see Choosing a payload subset section</span>
+    <span class="n">use_local_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">OrderItem</span><span class="p">:</span>
+    <span class="n">sku</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Order</span><span class="p">:</span>
+    <span class="n">item</span><span class="p">:</span> <span class="n">OrderItem</span>
+    <span class="n">order_id</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="hll"><span class="nd">@idempotent_function</span><span class="p">(</span><span class="n">data_keyword_argument</span><span class="o">=</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">dynamodb</span><span class="p">)</span>
+</span><span class="k">def</span> <span class="nf">process_order</span><span class="p">(</span><span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;processed order </span><span class="si">{</span><span class="n">order</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="n">order_item</span> <span class="o">=</span> <span class="n">OrderItem</span><span class="p">(</span><span class="n">sku</span><span class="o">=</span><span class="s2">&quot;fake&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">)</span>
+<span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="n">order_item</span><span class="p">,</span> <span class="n">order_id</span><span class="o">=</span><span class="s2">&quot;fake-id&quot;</span><span class="p">)</span>
+
+<span class="c1"># `order` parameter must be called as a keyword argument to work</span>
+<span class="hll"><span class="n">process_order</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+</div>
+<input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><label for="__tabbed_3_4">parser_pydantic_sample.py</label><div class="tabbed-content">
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
+</span><span class="hll">    <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent_function</span><span class="p">)</span>
+</span><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="n">dynamodb</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;idem&quot;</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span>  <span class="n">IdempotencyConfig</span><span class="p">(</span>
+    <span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;order_id&quot;</span><span class="p">,</span>  <span class="c1"># see Choosing a payload subset section</span>
+    <span class="n">use_local_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">OrderItem</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">sku</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="k">class</span> <span class="nc">Order</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">item</span><span class="p">:</span> <span class="n">OrderItem</span>
+    <span class="n">order_id</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="hll"><span class="nd">@idempotent_function</span><span class="p">(</span><span class="n">data_keyword_argument</span><span class="o">=</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">dynamodb</span><span class="p">)</span>
+</span><span class="k">def</span> <span class="nf">process_order</span><span class="p">(</span><span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;processed order </span><span class="si">{</span><span class="n">order</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="n">order_item</span> <span class="o">=</span> <span class="n">OrderItem</span><span class="p">(</span><span class="n">sku</span><span class="o">=</span><span class="s2">&quot;fake&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">)</span>
+<span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="n">order_item</span><span class="p">,</span> <span class="n">order_id</span><span class="o">=</span><span class="s2">&quot;fake-id&quot;</span><span class="p">)</span>
+
+<span class="c1"># `order` parameter must be called as a keyword argument to work</span>
+<span class="hll"><span class="n">process_order</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+</div>
 </div>
 <h3 id="choosing-a-payload-subset-for-idempotency">Choosing a payload subset for idempotency<a class="headerlink" href="#choosing-a-payload-subset-for-idempotency" title="Permanent link">&para;</a></h3>
 <div class="admonition tip">
@@ -1444,7 +1585,7 @@ estimate the cost.</p>
 <div class="admonition warning">
 <p class="admonition-title">Idempotency for JSON payloads</p>
 <p>The payload extracted by the <code>event_key_jmespath</code> is treated as a string by default, so will be sensitive to differences in whitespace even when the JSON payload itself is identical.</p>
-<p>To alter this behaviour, we can use the <a href="../jmespath_functions/#powertools_json-function">JMESPath built-in function</a> <code>powertools_json()</code> to treat the payload as a JSON object rather than a string.</p>
+<p>To alter this behaviour, we can use the <a href="../jmespath_functions/#powertools_json-function">JMESPath built-in function</a> <code>powertools_json()</code> to treat the payload as a JSON object (dict) rather than a string.</p>
 </div>
 <div class="tabbed-set" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><label for="__tabbed_4_1">payment.py</label><div class="tabbed-content">
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
@@ -2647,7 +2788,7 @@ This means it is possible to pass a mocked Table resource, or stub various metho
 <div class="md-source-date">
   <small>
     
-      Last update: 2021-11-12
+      Last update: 2021-12-22
     
   </small>
 </div>
