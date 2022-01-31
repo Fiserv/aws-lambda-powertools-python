@@ -1457,42 +1457,42 @@ Successfully created/updated stack - sam-app <span class="k">in</span> eu-centra
 <span class="normal">33</span>
 <span class="normal">34</span>
 <span class="normal">35</span>
-<span class="normal">36</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code>    <span class="kn">import</span> <span class="nn">json</span>
+<span class="normal">36</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
 
 
-<span class="hll">    <span class="k">def</span> <span class="nf">hello_name</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="o">**</span><span class="n">kargs</span><span class="p">):</span>
-</span>        <span class="n">username</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;pathParameters&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;hello </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">})}</span>
+<span class="hll"><span class="k">def</span> <span class="nf">hello_name</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="o">**</span><span class="n">kargs</span><span class="p">):</span>
+</span>    <span class="n">username</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;pathParameters&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;hello </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">})}</span>
 
 
-<span class="hll">    <span class="k">def</span> <span class="nf">hello</span><span class="p">(</span><span class="o">**</span><span class="n">kargs</span><span class="p">):</span>
-</span>        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;hello unknown!&quot;</span><span class="p">})}</span>
+<span class="hll"><span class="k">def</span> <span class="nf">hello</span><span class="p">(</span><span class="o">**</span><span class="n">kargs</span><span class="p">):</span>
+</span>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;hello unknown!&quot;</span><span class="p">})}</span>
 
 
-<span class="hll">    <span class="k">class</span> <span class="nc">Router</span><span class="p">:</span>
-</span>        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">routes</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="hll"><span class="k">class</span> <span class="nc">Router</span><span class="p">:</span>
+</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">routes</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">handler</span>
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">handler</span>
 
-        <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">route</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot route request to the correct method. path=</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">, method=</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">route</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">route</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot route request to the correct method. path=</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">, method=</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">route</span>
 
-<span class="hll">    <span class="n">router</span> <span class="o">=</span> <span class="n">Router</span><span class="p">()</span>
-</span><span class="hll">    <span class="n">router</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;/hello&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="n">hello</span><span class="p">)</span>
-</span><span class="hll">    <span class="n">router</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;/hello/</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="n">hello_name</span><span class="p">)</span>
+<span class="hll"><span class="n">router</span> <span class="o">=</span> <span class="n">Router</span><span class="p">()</span>
+</span><span class="hll"><span class="n">router</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;/hello&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="n">hello</span><span class="p">)</span>
+</span><span class="hll"><span class="n">router</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;/hello/</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="n">hello_name</span><span class="p">)</span>
 </span>
 
-    <span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;resource&quot;</span><span class="p">]</span>
-        <span class="n">http_method</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;httpMethod&quot;</span><span class="p">]</span>
-<span class="hll">        <span class="n">method</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">http_method</span><span class="p">)</span>
-</span><span class="hll">        <span class="k">return</span> <span class="n">method</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">event</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;resource&quot;</span><span class="p">]</span>
+    <span class="n">http_method</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;httpMethod&quot;</span><span class="p">]</span>
+<span class="hll">    <span class="n">method</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">http_method</span><span class="p">)</span>
+</span><span class="hll">    <span class="k">return</span> <span class="n">method</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">event</span><span class="p">)</span>
 </span></code></pre></div>
 </td></tr></table>
 </div>
@@ -1524,34 +1524,34 @@ Successfully created/updated stack - sam-app <span class="k">in</span> eu-centra
 <span class="normal">25</span>
 <span class="normal">26</span>
 <span class="normal">27</span>
-<span class="normal">28</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code>    <span class="nt">AWSTemplateFormatVersion</span><span class="p">:</span> <span class="s">&quot;2010-09-09&quot;</span>
-    <span class="nt">Transform</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">AWS::Serverless-2016-10-31</span>
-    <span class="nt">Description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sample SAM Template for powertools-quickstart</span>
-    <span class="nt">Globals</span><span class="p">:</span>
-        <span class="nt">Function</span><span class="p">:</span>
-            <span class="nt">Timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
-    <span class="nt">Resources</span><span class="p">:</span>
-        <span class="nt">HelloWorldFunction</span><span class="p">:</span>
-            <span class="nt">Type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">AWS::Serverless::Function</span>
-            <span class="nt">Properties</span><span class="p">:</span>
-                <span class="nt">CodeUri</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hello_world/</span>
-                <span class="nt">Handler</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app.lambda_handler</span>
-                <span class="nt">Runtime</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python3.9</span>
-                <span class="nt">Events</span><span class="p">:</span>
-<span class="hll">                    <span class="nt">HelloWorld</span><span class="p">:</span>
-</span><span class="hll">                        <span class="nt">Type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Api</span>
-</span><span class="hll">                        <span class="nt">Properties</span><span class="p">:</span>
-</span><span class="hll">                            <span class="nt">Path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/hello</span>
-</span><span class="hll">                            <span class="nt">Method</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">get</span>
-</span><span class="hll">                    <span class="nt">HelloWorldName</span><span class="p">:</span>
-</span><span class="hll">                        <span class="nt">Type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Api</span>
-</span><span class="hll">                        <span class="nt">Properties</span><span class="p">:</span>
-</span><span class="hll">                            <span class="nt">Path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/hello/{name}</span>
-</span><span class="hll">                            <span class="nt">Method</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">get</span>
-</span>    <span class="nt">Outputs</span><span class="p">:</span>
-        <span class="nt">HelloWorldApi</span><span class="p">:</span>
-            <span class="nt">Description</span><span class="p">:</span> <span class="s">&quot;API</span><span class="nv"> </span><span class="s">Gateway</span><span class="nv"> </span><span class="s">endpoint</span><span class="nv"> </span><span class="s">URL</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">Prod</span><span class="nv"> </span><span class="s">stage</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">Hello</span><span class="nv"> </span><span class="s">World</span><span class="nv"> </span><span class="s">function&quot;</span>
-            <span class="nt">Value</span><span class="p">:</span> <span class="kt">!Sub</span> <span class="s">&quot;https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/&quot;</span>
+<span class="normal">28</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nt">AWSTemplateFormatVersion</span><span class="p">:</span> <span class="s">&quot;2010-09-09&quot;</span>
+<span class="nt">Transform</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">AWS::Serverless-2016-10-31</span>
+<span class="nt">Description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sample SAM Template for powertools-quickstart</span>
+<span class="nt">Globals</span><span class="p">:</span>
+    <span class="nt">Function</span><span class="p">:</span>
+        <span class="nt">Timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="nt">Resources</span><span class="p">:</span>
+    <span class="nt">HelloWorldFunction</span><span class="p">:</span>
+        <span class="nt">Type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">AWS::Serverless::Function</span>
+        <span class="nt">Properties</span><span class="p">:</span>
+            <span class="nt">CodeUri</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hello_world/</span>
+            <span class="nt">Handler</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app.lambda_handler</span>
+            <span class="nt">Runtime</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python3.9</span>
+            <span class="nt">Events</span><span class="p">:</span>
+<span class="hll">                <span class="nt">HelloWorld</span><span class="p">:</span>
+</span><span class="hll">                    <span class="nt">Type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Api</span>
+</span><span class="hll">                    <span class="nt">Properties</span><span class="p">:</span>
+</span><span class="hll">                        <span class="nt">Path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/hello</span>
+</span><span class="hll">                        <span class="nt">Method</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">get</span>
+</span><span class="hll">                <span class="nt">HelloWorldName</span><span class="p">:</span>
+</span><span class="hll">                    <span class="nt">Type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Api</span>
+</span><span class="hll">                    <span class="nt">Properties</span><span class="p">:</span>
+</span><span class="hll">                        <span class="nt">Path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/hello/{name}</span>
+</span><span class="hll">                        <span class="nt">Method</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">get</span>
+</span><span class="nt">Outputs</span><span class="p">:</span>
+    <span class="nt">HelloWorldApi</span><span class="p">:</span>
+        <span class="nt">Description</span><span class="p">:</span> <span class="s">&quot;API</span><span class="nv"> </span><span class="s">Gateway</span><span class="nv"> </span><span class="s">endpoint</span><span class="nv"> </span><span class="s">URL</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">Prod</span><span class="nv"> </span><span class="s">stage</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">Hello</span><span class="nv"> </span><span class="s">World</span><span class="nv"> </span><span class="s">function&quot;</span>
+        <span class="nt">Value</span><span class="p">:</span> <span class="kt">!Sub</span> <span class="s">&quot;https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/&quot;</span>
 </code></pre></div>
 </td></tr></table>
 </div>
@@ -2626,7 +2626,7 @@ aws-xray-sdk
 <div class="md-source-date">
   <small>
     
-      Last update: 2022-01-18
+      Last update: 2022-02-01
     
   </small>
 </div>
