@@ -1590,9 +1590,9 @@ Successfully created/updated stack - sam-app <span class="k">in</span> eu-centra
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="normal">17</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 </span>
-<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 </span>
 
 <span class="hll"><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello/&lt;name&gt;&quot;</span><span class="p">)</span>
@@ -1619,7 +1619,7 @@ Successfully created/updated stack - sam-app <span class="k">in</span> eu-centra
 <p>Use <code>sam build &amp;&amp; sam local start-api</code> and try run it locally again.</p>
 <details class="note" open="open">
 <summary>Note</summary>
-<p>If you're coming from <a href="https://flask.palletsprojects.com/en/2.0.x/" target="_blank">Flask</a>, you will be familiar with this experience already. <a href="./core/event_handler/api_gateway.md" target="_blank">Event Handler for API Gateway</a> uses <code>ApiGatewayResolver</code> to give a Flask-like experience while staying true to our tenet <code>Keep it lean</code>.</p>
+<p>If you're coming from <a href="https://flask.palletsprojects.com/en/2.0.x/" target="_blank">Flask</a>, you will be familiar with this experience already. <a href="./core/event_handler/api_gateway.md" target="_blank">Event Handler for API Gateway</a> uses <code>APIGatewayRestResolver</code> to give a Flask-like experience while staying true to our tenet <code>Keep it lean</code>.</p>
 </details>
 <p>We have added the route annotation as the decorator for our methods. It enables us to use the parameters passed in the request directly, and our responses are simply dictionaries.</p>
 <p>Lastly, we used <code>return app.resolve(event, context)</code> so Event Handler can resolve routes, inject the current request, handle serialization, route validation, etc.</p>
@@ -1669,7 +1669,7 @@ Successfully created/updated stack - sam-app <span class="k">in</span> eu-centra
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="hll"><span class="kn">from</span> <span class="nn">pythonjsonlogger</span> <span class="kn">import</span> <span class="n">jsonlogger</span>
-</span><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+</span><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 </span>
 <span class="hll"><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;APP&quot;</span><span class="p">)</span>
 </span><span class="hll"><span class="n">logHandler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
@@ -1678,7 +1678,7 @@ Successfully created/updated stack - sam-app <span class="k">in</span> eu-centra
 </span><span class="hll"><span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logHandler</span><span class="p">)</span>
 </span><span class="hll"><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;LOG_LEVEL&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">))</span>
 </span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello/&lt;name&gt;&quot;</span><span class="p">)</span>
@@ -1767,12 +1767,12 @@ python-json-logger
 <span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span>
-</span><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+</span><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 <span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
 </span>
 <span class="hll"><span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="s2">&quot;APP&quot;</span><span class="p">)</span>
 </span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello/&lt;name&gt;&quot;</span><span class="p">)</span>
@@ -1880,12 +1880,12 @@ python-json-logger
 <span class="normal">29</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_xray_sdk.core</span> <span class="kn">import</span> <span class="n">xray_recorder</span>
 </span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="s2">&quot;APP&quot;</span><span class="p">)</span>
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello/&lt;name&gt;&quot;</span><span class="p">)</span>
@@ -2062,12 +2062,12 @@ aws-xray-sdk
 <span class="normal">47</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_xray_sdk.core</span> <span class="kn">import</span> <span class="n">patch_all</span><span class="p">,</span> <span class="n">xray_recorder</span>
 
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="s2">&quot;APP&quot;</span><span class="p">)</span>
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 <span class="hll"><span class="n">cold_start</span> <span class="o">=</span> <span class="kc">True</span>
 </span><span class="n">patch_all</span><span class="p">()</span>
 
@@ -2161,12 +2161,12 @@ aws-xray-sdk
 <span class="normal">27</span>
 <span class="normal">28</span>
 <span class="normal">29</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
-</span><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+</span><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="s2">&quot;APP&quot;</span><span class="p">)</span>
 <span class="hll"><span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="s2">&quot;APP&quot;</span><span class="p">)</span>
-</span><span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+</span><span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello/&lt;name&gt;&quot;</span><span class="p">)</span>
@@ -2301,7 +2301,7 @@ aws-xray-sdk
 <span class="hll"><span class="kn">import</span> <span class="nn">boto3</span>
 </span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
 
 <span class="n">cold_start</span> <span class="o">=</span> <span class="kc">True</span>
@@ -2310,7 +2310,7 @@ aws-xray-sdk
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="s2">&quot;APP&quot;</span><span class="p">)</span>
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="s2">&quot;APP&quot;</span><span class="p">)</span>
 <span class="hll"><span class="n">metrics</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;cloudwatch&quot;</span><span class="p">)</span>
-</span><span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+</span><span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 
 <span class="nd">@tracer</span><span class="o">.</span><span class="n">capture_method</span>
@@ -2500,7 +2500,7 @@ aws-xray-sdk
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span><span class="p">,</span> <span class="n">Metrics</span>
-</span><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+</span><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
 <span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.metrics</span> <span class="kn">import</span> <span class="n">MetricUnit</span>
 </span>
@@ -2508,7 +2508,7 @@ aws-xray-sdk
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="s2">&quot;APP&quot;</span><span class="p">)</span>
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="s2">&quot;APP&quot;</span><span class="p">)</span>
 <span class="hll"><span class="n">metrics</span> <span class="o">=</span> <span class="n">Metrics</span><span class="p">(</span><span class="n">namespace</span><span class="o">=</span><span class="s2">&quot;MyApp&quot;</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="s2">&quot;APP&quot;</span><span class="p">)</span>
-</span><span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+</span><span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello/&lt;name&gt;&quot;</span><span class="p">)</span>
@@ -2626,7 +2626,7 @@ aws-xray-sdk
 <div class="md-source-date">
   <small>
     
-      Last update: 2022-02-01
+      Last update: 2022-02-03
     
   </small>
 </div>

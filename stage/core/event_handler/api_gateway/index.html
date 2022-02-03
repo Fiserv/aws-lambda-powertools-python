@@ -480,23 +480,30 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#api-gateway-decorator" class="md-nav__link">
-    API Gateway decorator
+  <a href="#event-resolvers" class="md-nav__link">
+    Event Resolvers
   </a>
   
-    <nav class="md-nav" aria-label="API Gateway decorator">
+    <nav class="md-nav" aria-label="Event Resolvers">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#http-api" class="md-nav__link">
-    HTTP API
+  <a href="#api-gateway-rest-api" class="md-nav__link">
+    API Gateway REST API
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#alb" class="md-nav__link">
-    ALB
+  <a href="#api-gateway-http-api" class="md-nav__link">
+    API Gateway HTTP API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-load-balancer" class="md-nav__link">
+    Application Load Balancer
   </a>
   
 </li>
@@ -1041,23 +1048,30 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#api-gateway-decorator" class="md-nav__link">
-    API Gateway decorator
+  <a href="#event-resolvers" class="md-nav__link">
+    Event Resolvers
   </a>
   
-    <nav class="md-nav" aria-label="API Gateway decorator">
+    <nav class="md-nav" aria-label="Event Resolvers">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#http-api" class="md-nav__link">
-    HTTP API
+  <a href="#api-gateway-rest-api" class="md-nav__link">
+    API Gateway REST API
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#alb" class="md-nav__link">
-    ALB
+  <a href="#api-gateway-http-api" class="md-nav__link">
+    API Gateway HTTP API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-load-balancer" class="md-nav__link">
+    Application Load Balancer
   </a>
   
 </li>
@@ -1323,7 +1337,7 @@
                 
                   <h1>REST API</h1>
                 
-                <p>Event handler for Amazon API Gateway REST/HTTP APIs and Application Loader Balancer (ALB).</p>
+                <p>Event handler for Amazon API Gateway REST and HTTP APIs, and Application Loader Balancer (ALB).</p>
 <h3 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Lightweight routing to reduce boilerplate for API Gateway REST/HTTP API and ALB</li>
@@ -1331,7 +1345,7 @@
 <li>Integrates with <a href="../../../utilities/data_classes/" target="_blank">Data classes utilities</a> to easily access event and identity information</li>
 <li>Built-in support for Decimals JSON encoding</li>
 <li>Support for dynamic path expressions</li>
-<li>Router to allow for splitting up the handler accross multiple files</li>
+<li>Router to allow for splitting up the handler across multiple files</li>
 </ul>
 <h2 id="getting-started">Getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <h3 id="required-resources">Required resources<a class="headerlink" href="#required-resources" title="Permanent link">&para;</a></h3>
@@ -1414,12 +1428,20 @@
                 <span class="nt">Method</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ANY</span>  <span class="c1"># Send requests using any http method to the lambda function</span>
 </code></pre></div>
 </td></tr></table>
-<h3 id="api-gateway-decorator">API Gateway decorator<a class="headerlink" href="#api-gateway-decorator" title="Permanent link">&para;</a></h3>
-<p>You can define your functions to match a path and HTTP method, when you use the decorator <code>ApiGatewayResolver</code>.</p>
-<p>Here's an example where we have two separate functions to resolve two paths: <code>/hello</code>.</p>
+<h3 id="event-resolvers">Event Resolvers<a class="headerlink" href="#event-resolvers" title="Permanent link">&para;</a></h3>
+<p>Before you decorate your functions to handle a given path and HTTP method(s), you need to initialize a resolver.</p>
+<p>A resolver will handle request resolution, include <a href="#split-routes-with-router">one or more routers</a>, and give you access to the current event via typed properties.</p>
+<p>For resolvers, we provide: <code>APIGatewayRestResolver</code>, <code>APIGatewayHttpResolver</code>, and <code>ALBResolver</code>.</p>
 <details class="info" open="open">
 <summary>Info</summary>
-<p>We automatically serialize <code>Dict</code> responses as JSON, trim whitespaces for compact responses, and set content-type to <code>application/json</code>.</p>
+<p>We will use <code>APIGatewayRestResolver</code> as the default across examples.</p>
+</details>
+<h4 id="api-gateway-rest-api">API Gateway REST API<a class="headerlink" href="#api-gateway-rest-api" title="Permanent link">&para;</a></h4>
+<p>When using Amazon API Gateway REST API to front your Lambda functions, you can use <code>APIGatewayRestResolver</code>.</p>
+<p>Here's an example on how we can handle the <code>/hello</code> path.</p>
+<details class="info" open="open">
+<summary>Info</summary>
+<p>We automatically serialize <code>Dict</code> responses as JSON, trim whitespace for compact responses, and set content-type to <code>application/json</code>.</p>
 </details>
 <div class="tabbed-set" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">app.py</label><div class="tabbed-content">
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
@@ -1441,11 +1463,11 @@
 <span class="normal">17</span>
 <span class="normal">18</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 </span>
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>  <span class="c1"># by default API Gateway REST API (v1)</span>
+<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 </span>
 <span class="hll"><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello&quot;</span><span class="p">)</span>
 </span><span class="nd">@tracer</span><span class="o">.</span><span class="n">capture_method</span>
@@ -1530,32 +1552,32 @@
 </span><span class="hll">    <span class="nt">&quot;httpMethod&quot;</span><span class="p">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
 </span>    <span class="nt">&quot;isBase64Encoded&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nt">&quot;queryStringParameters&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;foo&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span>
+        <span class="nt">&quot;foo&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span>
     <span class="p">},</span>
     <span class="nt">&quot;multiValueQueryStringParameters&quot;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="nt">&quot;pathParameters&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;hello&quot;</span><span class="p">:</span> <span class="s2">&quot;/hello&quot;</span>
+        <span class="nt">&quot;hello&quot;</span><span class="p">:</span> <span class="s2">&quot;/hello&quot;</span>
     <span class="p">},</span>
     <span class="nt">&quot;stageVariables&quot;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="nt">&quot;headers&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;Accept-Encoding&quot;</span><span class="p">:</span> <span class="s2">&quot;gzip, deflate, sdch&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;Accept-Language&quot;</span><span class="p">:</span> <span class="s2">&quot;en-US,en;q=0.8&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;Cache-Control&quot;</span><span class="p">:</span> <span class="s2">&quot;max-age=0&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;CloudFront-Forwarded-Proto&quot;</span><span class="p">:</span> <span class="s2">&quot;https&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;CloudFront-Is-Desktop-Viewer&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;CloudFront-Is-Mobile-Viewer&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;CloudFront-Is-SmartTV-Viewer&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;CloudFront-Is-Tablet-Viewer&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;CloudFront-Viewer-Country&quot;</span><span class="p">:</span> <span class="s2">&quot;US&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;Host&quot;</span><span class="p">:</span> <span class="s2">&quot;1234567890.execute-api.us-east-1.amazonaws.com&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;Upgrade-Insecure-Requests&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Custom User Agent String&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;Via&quot;</span><span class="p">:</span> <span class="s2">&quot;1.1 08f323deadbeefa7af34d5feb414ce27.cloudfront.net (CloudFront)&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;X-Amz-Cf-Id&quot;</span><span class="p">:</span> <span class="s2">&quot;cDehVQoZnx43VYQb9j2-nvCh-9z396Uhbp027Y2JvkCPNLmGJHqlaA==&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;X-Forwarded-For&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1, 127.0.0.2&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;X-Forwarded-Port&quot;</span><span class="p">:</span> <span class="s2">&quot;443&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;X-Forwarded-Proto&quot;</span><span class="p">:</span> <span class="s2">&quot;https&quot;</span>
+        <span class="nt">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;Accept-Encoding&quot;</span><span class="p">:</span> <span class="s2">&quot;gzip, deflate, sdch&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;Accept-Language&quot;</span><span class="p">:</span> <span class="s2">&quot;en-US,en;q=0.8&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;Cache-Control&quot;</span><span class="p">:</span> <span class="s2">&quot;max-age=0&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;CloudFront-Forwarded-Proto&quot;</span><span class="p">:</span> <span class="s2">&quot;https&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;CloudFront-Is-Desktop-Viewer&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;CloudFront-Is-Mobile-Viewer&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;CloudFront-Is-SmartTV-Viewer&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;CloudFront-Is-Tablet-Viewer&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;CloudFront-Viewer-Country&quot;</span><span class="p">:</span> <span class="s2">&quot;US&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;Host&quot;</span><span class="p">:</span> <span class="s2">&quot;1234567890.execute-api.us-east-1.amazonaws.com&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;Upgrade-Insecure-Requests&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Custom User Agent String&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;Via&quot;</span><span class="p">:</span> <span class="s2">&quot;1.1 08f323deadbeefa7af34d5feb414ce27.cloudfront.net (CloudFront)&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;X-Amz-Cf-Id&quot;</span><span class="p">:</span> <span class="s2">&quot;cDehVQoZnx43VYQb9j2-nvCh-9z396Uhbp027Y2JvkCPNLmGJHqlaA==&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;X-Forwarded-For&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1, 127.0.0.2&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;X-Forwarded-Port&quot;</span><span class="p">:</span> <span class="s2">&quot;443&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;X-Forwarded-Proto&quot;</span><span class="p">:</span> <span class="s2">&quot;https&quot;</span>
     <span class="p">},</span>
     <span class="nt">&quot;multiValueHeaders&quot;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="nt">&quot;requestContext&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -1608,8 +1630,13 @@
 </td></tr></table>
 </div>
 </div>
-<h4 id="http-api">HTTP API<a class="headerlink" href="#http-api" title="Permanent link">&para;</a></h4>
-<p>When using API Gateway HTTP API to front your Lambda functions, you can instruct <code>ApiGatewayResolver</code> to conform with their contract via <code>proxy_type</code> param:</p>
+<h4 id="api-gateway-http-api">API Gateway HTTP API<a class="headerlink" href="#api-gateway-http-api" title="Permanent link">&para;</a></h4>
+<p>When using Amazon API Gateway HTTP API to front your Lambda functions, you can use <code>APIGatewayHttpResolver</code>.</p>
+<details class="note" open="open">
+<summary>Note</summary>
+<p>Using HTTP API v1 payload? Use <code>APIGatewayRestResolver</code> instead. <code>APIGatewayHttpResolver</code> defaults to v2 payload.</p>
+</details>
+<p>Here's an example on how we can handle the <code>/hello</code> path.</p>
 <table class="highlighttable"><tr><th colspan="2" class="filename"><div class="highlight"><span class="filename">Using HTTP API resolver</span></div></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
 <span class="normal"> 3</span>
@@ -1629,11 +1656,11 @@
 <span class="normal">17</span>
 <span class="normal">18</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span><span class="p">,</span> <span class="n">ProxyEventType</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayHttpResolver</span>
 </span>
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">(</span><span class="n">proxy_type</span><span class="o">=</span><span class="n">ProxyEventType</span><span class="o">.</span><span class="n">APIGatewayProxyEventV2</span><span class="p">)</span>
+<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayHttpResolver</span><span class="p">()</span>
 </span>
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello&quot;</span><span class="p">)</span>
 <span class="nd">@tracer</span><span class="o">.</span><span class="n">capture_method</span>
@@ -1647,8 +1674,8 @@
     <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 </code></pre></div>
 </td></tr></table>
-<h4 id="alb">ALB<a class="headerlink" href="#alb" title="Permanent link">&para;</a></h4>
-<p>When using ALB to front your Lambda functions, you can instruct <code>ApiGatewayResolver</code> to conform with their contract via <code>proxy_type</code> param:</p>
+<h4 id="application-load-balancer">Application Load Balancer<a class="headerlink" href="#application-load-balancer" title="Permanent link">&para;</a></h4>
+<p>When using Amazon Application Load Balancer to front your Lambda functions, you can use <code>ALBResolver</code>.</p>
 <table class="highlighttable"><tr><th colspan="2" class="filename"><div class="highlight"><span class="filename">Using ALB resolver</span></div></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
 <span class="normal"> 3</span>
@@ -1668,11 +1695,11 @@
 <span class="normal">17</span>
 <span class="normal">18</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span><span class="p">,</span> <span class="n">ProxyEventType</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">ALBResolver</span>
 </span>
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">(</span><span class="n">proxy_type</span><span class="o">=</span><span class="n">ProxyEventType</span><span class="o">.</span><span class="n">ALBEvent</span><span class="p">)</span>
+<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">ALBResolver</span><span class="p">()</span>
 </span>
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello&quot;</span><span class="p">)</span>
 <span class="nd">@tracer</span><span class="o">.</span><span class="n">capture_method</span>
@@ -1708,11 +1735,11 @@
 <span class="normal">17</span>
 <span class="normal">18</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 <span class="hll"><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello/&lt;name&gt;&quot;</span><span class="p">)</span>
 </span><span class="nd">@tracer</span><span class="o">.</span><span class="n">capture_method</span>
@@ -1765,11 +1792,11 @@
 <span class="normal">17</span>
 <span class="normal">18</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 <span class="hll"><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&lt;message&gt;/&lt;name&gt;&quot;</span><span class="p">)</span>
 </span><span class="nd">@tracer</span><span class="o">.</span><span class="n">capture_method</span>
@@ -1821,9 +1848,9 @@
 <span class="normal"> 7</span>
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
-<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 <span class="hll"><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;.+&quot;</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">catch_any_route_after_any</span><span class="p">():</span>
@@ -1875,11 +1902,11 @@
 <span class="normal">19</span>
 <span class="normal">20</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 <span class="hll"><span class="c1"># Only POST HTTP requests to the path /hello will route to this function</span>
 </span><span class="hll"><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/hello&quot;</span><span class="p">)</span>
@@ -1936,11 +1963,11 @@ HTTP methods.</p>
 <span class="normal">19</span>
 <span class="normal">20</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 <span class="hll"><span class="c1"># PUT and POST HTTP requests to the path /hello will route to this function</span>
 </span><span class="hll"><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/hello&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;PUT&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
@@ -1979,7 +2006,7 @@ HTTP methods.</p>
 </details>
 <h3 id="accessing-request-details">Accessing request details<a class="headerlink" href="#accessing-request-details" title="Permanent link">&para;</a></h3>
 <p>By integrating with <a href="../../../utilities/data_classes/" target="_blank">Data classes utilities</a>, you have access to request details, Lambda context and also some convenient methods.</p>
-<p>These are made available in the response returned when instantiating <code>ApiGatewayResolver</code>, for example <code>app.current_event</code> and <code>app.lambda_context</code>.</p>
+<p>These are made available in the response returned when instantiating <code>APIGatewayRestResolver</code>, for example <code>app.current_event</code> and <code>app.lambda_context</code>.</p>
 <h4 id="query-strings-and-payload">Query strings and payload<a class="headerlink" href="#query-strings-and-payload" title="Permanent link">&para;</a></h4>
 <p>Within <code>app.current_event</code> property, you can access query strings as dictionary via <code>query_string_parameters</code>, or by name via <code>get_query_string_value</code> method.</p>
 <p>You can access the raw payload via <code>body</code> property, or if it's a JSON string you can quickly deserialize it via <code>json_body</code> property.</p>
@@ -1997,9 +2024,9 @@ HTTP methods.</p>
 <span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span>
-<span class="normal">15</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_hello_you</span><span class="p">():</span>
@@ -2028,9 +2055,9 @@ HTTP methods.</p>
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_hello_you</span><span class="p">():</span>
@@ -2079,12 +2106,12 @@ HTTP methods.</p>
 <span class="normal">31</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">content_types</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span><span class="p">,</span> <span class="n">Response</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.exceptions</span> <span class="kn">import</span> <span class="n">NotFoundError</span>
 
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 <span class="hll"><span class="nd">@app</span><span class="o">.</span><span class="n">not_found</span>
 </span><span class="nd">@tracer</span><span class="o">.</span><span class="n">capture_method</span>
@@ -2146,11 +2173,11 @@ HTTP methods.</p>
 <span class="normal">33</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">content_types</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span><span class="p">,</span> <span class="n">Response</span>
 
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 <span class="hll"><span class="nd">@app</span><span class="o">.</span><span class="n">exception_handler</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">handle_value_error</span><span class="p">(</span><span class="n">ex</span><span class="p">:</span> <span class="ne">ValueError</span><span class="p">):</span>
@@ -2231,7 +2258,7 @@ HTTP methods.</p>
 <span class="normal">44</span>
 <span class="normal">45</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 <span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
 </span><span class="hll">    <span class="n">BadRequestError</span><span class="p">,</span>
 </span><span class="hll">    <span class="n">InternalServerError</span><span class="p">,</span>
@@ -2243,7 +2270,7 @@ HTTP methods.</p>
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">rule</span><span class="o">=</span><span class="s2">&quot;/bad-request-error&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">bad_request_error</span><span class="p">():</span>
@@ -2277,7 +2304,7 @@ HTTP methods.</p>
 </code></pre></div>
 </td></tr></table>
 <h3 id="custom-domain-api-mappings">Custom Domain API Mappings<a class="headerlink" href="#custom-domain-api-mappings" title="Permanent link">&para;</a></h3>
-<p>When using Custom Domain API Mappings feature, you must use <strong><code>strip_prefixes</code></strong> param in the <code>ApiGatewayResolver</code> constructor.</p>
+<p>When using Custom Domain API Mappings feature, you must use <strong><code>strip_prefixes</code></strong> param in the <code>APIGatewayRestResolver</code> constructor.</p>
 <p>Scenario: You have a custom domain <code>api.mydomain.dev</code> and set an API Mapping <code>payment</code> to forward requests to your Payments API, the path argument will be <code>/payment/&lt;your_actual_path&gt;</code>.</p>
 <p>This will lead to a HTTP 404 despite having your Lambda configured correctly. See the example below on how to account for this change.</p>
 <div class="tabbed-set" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><label for="__tabbed_7_1">app.py</label><div class="tabbed-content">
@@ -2299,11 +2326,11 @@ HTTP methods.</p>
 <span class="normal">16</span>
 <span class="normal">17</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">(</span><span class="n">strip_prefixes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;/payment&quot;</span><span class="p">])</span>
+<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">(</span><span class="n">strip_prefixes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;/payment&quot;</span><span class="p">])</span>
 </span>
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/subscriptions/&lt;subscription&gt;&quot;</span><span class="p">)</span>
 <span class="nd">@tracer</span><span class="o">.</span><span class="n">capture_method</span>
@@ -2340,7 +2367,7 @@ HTTP methods.</p>
 </details>
 <h2 id="advanced">Advanced<a class="headerlink" href="#advanced" title="Permanent link">&para;</a></h2>
 <h3 id="cors">CORS<a class="headerlink" href="#cors" title="Permanent link">&para;</a></h3>
-<p>You can configure CORS at the <code>ApiGatewayResolver</code> constructor via <code>cors</code> parameter using the <code>CORSConfig</code> class.</p>
+<p>You can configure CORS at the <code>APIGatewayRestResolver</code> constructor via <code>cors</code> parameter using the <code>CORSConfig</code> class.</p>
 <p>This will ensure that CORS headers are always returned as part of the response when your functions match the path invoked.</p>
 <div class="tabbed-set" data-tabs="8:3"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><label for="__tabbed_8_1">app.py</label><div class="tabbed-content">
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
@@ -2369,13 +2396,13 @@ HTTP methods.</p>
 <span class="normal">24</span>
 <span class="normal">25</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span><span class="p">,</span> <span class="n">CORSConfig</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span><span class="p">,</span> <span class="n">CORSConfig</span>
 
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
 
 <span class="n">cors_config</span> <span class="o">=</span> <span class="n">CORSConfig</span><span class="p">(</span><span class="n">allow_origin</span><span class="o">=</span><span class="s2">&quot;https://example.com&quot;</span><span class="p">,</span> <span class="n">max_age</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
-<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">(</span><span class="n">cors</span><span class="o">=</span><span class="n">cors_config</span><span class="p">)</span>
+<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">(</span><span class="n">cors</span><span class="o">=</span><span class="n">cors_config</span><span class="p">)</span>
 </span>
 <span class="hll"><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello/&lt;name&gt;&quot;</span><span class="p">)</span>
 </span><span class="nd">@tracer</span><span class="o">.</span><span class="n">capture_method</span>
@@ -2506,9 +2533,9 @@ HTTP methods.</p>
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span><span class="p">,</span> <span class="n">Response</span>
+<span class="normal">17</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span><span class="p">,</span> <span class="n">Response</span>
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_hello_you</span><span class="p">():</span>
@@ -2555,9 +2582,9 @@ HTTP methods.</p>
 <span class="normal"> 7</span>
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
-<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
 <span class="hll"><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello&quot;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">get_hello_you</span><span class="p">():</span>
@@ -2633,9 +2660,9 @@ HTTP methods.</p>
 <span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span><span class="p">,</span> <span class="n">Response</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span><span class="p">,</span> <span class="n">Response</span>
 </span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 <span class="hll"><span class="n">logo_file</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;LAMBDA_TASK_ROOT&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/logo.svg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">()</span>
 </span>
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/logo&quot;</span><span class="p">)</span>
@@ -2782,9 +2809,9 @@ HTTP methods.</p>
 <span class="normal"> 7</span>
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
-<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 
-<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span>
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_hello_universe</span><span class="p">():</span>
@@ -2831,10 +2858,14 @@ HTTP methods.</p>
 <span class="normal">33</span>
 <span class="normal">34</span>
 <span class="normal">35</span>
-<span class="normal">36</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">JSONEncoder</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 
 <span class="k">class</span> <span class="nc">CustomEncoder</span><span class="p">(</span><span class="n">JSONEncoder</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Your customer json encoder&quot;&quot;&quot;</span>
@@ -2847,15 +2878,15 @@ HTTP methods.</p>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+<span class="hll">        <span class="k">return</span> <span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="k">def</span> <span class="nf">custom_serializer</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Your custom serializer function APIGatewayRestResolver will use&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">CustomEncoder</span><span class="p">)</span>
+<span class="hll">
+</span><span class="c1"># Assigning your custom serializer</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">(</span><span class="n">serializer</span><span class="o">=</span><span class="n">custom_serializer</span><span class="p">)</span>
 
-<span class="hll"><span class="k">def</span> <span class="nf">custom_serializer</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span class="hll">    <span class="sd">&quot;&quot;&quot;Your custom serializer function ApiGatewayResolver will use&quot;&quot;&quot;</span>
-</span>    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">CustomEncoder</span><span class="p">)</span>
-
-<span class="c1"># Assigning your custom serializer</span>
-<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">(</span><span class="n">serializer</span><span class="o">=</span><span class="n">custom_serializer</span><span class="p">)</span>
-</span>
 <span class="k">class</span> <span class="nc">Color</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">BLUE</span> <span class="o">=</span> <span class="mi">2</span>
@@ -2873,7 +2904,7 @@ HTTP methods.</p>
 <p>As you grow the number of routes a given Lambda function should handle, it is natural to split routes into separate files to ease maintenance - That's where the <code>Router</code> feature is useful.</p>
 <p>Let's assume you have <code>app.py</code> as your Lambda function entrypoint and routes in <code>users.py</code>, this is how you'd use the <code>Router</code> feature.</p>
 <div class="tabbed-set" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><label for="__tabbed_12_1">users.py</label><div class="tabbed-content">
-<p>We import <strong>Router</strong> instead of <strong>ApiGatewayResolver</strong>; syntax wise is exactly the same.</p>
+<p>We import <strong>Router</strong> instead of <strong>APIGatewayRestResolver</strong>; syntax wise is exactly the same.</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
 <span class="normal"> 3</span>
@@ -2947,13 +2978,13 @@ HTTP methods.</p>
 <span class="normal">15</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
 
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.typing</span> <span class="kn">import</span> <span class="n">LambdaContext</span>
 
 <span class="hll"><span class="kn">import</span> <span class="nn">users</span>
 </span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="hll"><span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 </span><span class="hll"><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">router</span><span class="p">)</span>
 </span>
 
@@ -2981,12 +3012,12 @@ HTTP methods.</p>
 <span class="normal">12</span>
 <span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
 
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.typing</span> <span class="kn">import</span> <span class="n">LambdaContext</span>
 
 <span class="kn">import</span> <span class="nn">users</span>
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 <span class="hll"><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">router</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;/users&quot;</span><span class="p">)</span> <span class="c1"># prefix &#39;/users&#39; to any route in `users.router`</span>
 </span>
 
@@ -3226,25 +3257,23 @@ HTTP methods.</p>
 <span class="normal">18</span>
 <span class="normal">19</span>
 <span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="normal">21</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
 
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Tracer</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ProxyEventType</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging.correlation_paths</span> <span class="kn">import</span> <span class="n">APPLICATION_LOAD_BALANCER</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.typing</span> <span class="kn">import</span> <span class="n">LambdaContext</span>
 
-<span class="hll"><span class="kn">from</span> <span class="nn">.routers</span> <span class="kn">import</span> <span class="n">health</span><span class="p">,</span> <span class="n">users</span>
-</span>
-<span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">.routers</span> <span class="kn">import</span> <span class="n">health</span><span class="p">,</span> <span class="n">users</span>
+<span class="hll">
+</span><span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">(</span><span class="n">proxy_type</span><span class="o">=</span><span class="n">ProxyEventType</span><span class="o">.</span><span class="n">APIGatewayProxyEvent</span><span class="p">)</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>
 
-<span class="hll"><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">health</span><span class="o">.</span><span class="n">router</span><span class="p">)</span>
-</span><span class="hll"><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">router</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">health</span><span class="o">.</span><span class="n">router</span><span class="p">)</span>
+<span class="hll"><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">router</span><span class="p">)</span>
+</span><span class="hll">
 </span>
-
 <span class="nd">@logger</span><span class="o">.</span><span class="n">inject_lambda_context</span><span class="p">(</span><span class="n">correlation_id_path</span><span class="o">=</span><span class="n">API_GATEWAY_REST</span><span class="p">)</span>
 <span class="nd">@tracer</span><span class="o">.</span><span class="n">capture_lambda_handler</span>
 <span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">LambdaContext</span><span class="p">):</span>
@@ -3429,10 +3458,10 @@ your development, building, deployment tooling need to accommodate the distinct 
 <span class="normal">14</span>
 <span class="normal">15</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Logger</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.logging</span> <span class="kn">import</span> <span class="n">correlation_paths</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler.api_gateway</span> <span class="kn">import</span> <span class="n">ApiGatewayResolver</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.event_handler</span> <span class="kn">import</span> <span class="n">APIGatewayRestResolver</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">ApiGatewayResolver</span><span class="p">()</span>  <span class="c1"># by default API Gateway REST API (v1)</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">APIGatewayRestResolver</span><span class="p">()</span>  <span class="c1"># API Gateway REST API (v1)</span>
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/hello&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_hello_universe</span><span class="p">():</span>
@@ -3450,6 +3479,12 @@ your development, building, deployment tooling need to accommodate the distinct 
 <p><strong>What's the difference between this utility and frameworks like Chalice?</strong></p>
 <p>Chalice is a full featured microframework that manages application and infrastructure. This utility, however, is largely focused on routing to reduce boilerplate and expects you to setup and manage infrastructure with your framework of choice.</p>
 <p>That said, <a href="https://aws.github.io/chalice/topics/middleware.html" target="_blank">Chalice has native integration with Lambda Powertools</a> if you're looking for a more opinionated and web framework feature set.</p>
+<p><strong>What happened to <code>ApiGatewayResolver</code>?</strong></p>
+<p>It's been superseded by more explicit resolvers like <code>APIGatewayRestResolver</code>, <code>APIGatewayHttpResolver</code>, and <code>ALBResolver</code>.</p>
+<p><code>ApiGatewayResolver</code> handled multiple types of event resolvers for convenience via <code>proxy_type</code> param. However,
+it made it impossible for static checkers like Mypy and IDEs IntelliSense to know what properties a <code>current_event</code> would have due to late bound resolution.</p>
+<p>This provided a suboptimal experience for customers not being able to find all properties available besides common ones between API Gateway REST, HTTP, and ALB - while manually annotating <code>app.current_event</code> would work it is not the experience we want to provide to customers.</p>
+<p><code>ApiGatewayResolver</code> will be deprecated in v2 and have appropriate warnings as soon as we have a v2 draft.</p>
                 
                   
                     
@@ -3458,7 +3493,7 @@ your development, building, deployment tooling need to accommodate the distinct 
 <div class="md-source-date">
   <small>
     
-      Last update: 2022-01-31
+      Last update: 2022-02-03
     
   </small>
 </div>
