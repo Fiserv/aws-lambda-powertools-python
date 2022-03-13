@@ -696,8 +696,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#idempotent_function-decorator" class="md-nav__link">
-    Idempotent_function decorator
+  <a href="#idempotent-function-decorator" class="md-nav__link">
+    Idempotent function decorator
   </a>
   
 </li>
@@ -1003,8 +1003,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#idempotent_function-decorator" class="md-nav__link">
-    Idempotent_function decorator
+  <a href="#idempotent-function-decorator" class="md-nav__link">
+    Idempotent function decorator
   </a>
   
 </li>
@@ -1280,7 +1280,12 @@ times with the same parameters</strong>. This makes idempotent operations safe t
 <span class="normal">20</span>
 <span class="normal">21</span>
 <span class="normal">22</span>
-<span class="normal">23</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nt">Resources</span><span class="p">:</span><span class="w"></span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nt">AWSTemplateFormatVersion</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2010-09-09&quot;</span><span class="w"></span>
+<span class="nt">Transform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS::Serverless-2016-10-31</span><span class="w"></span>
+<span class="nt">Resources</span><span class="p">:</span><span class="w"></span>
 <span class="w">  </span><span class="nt">IdempotencyTable</span><span class="p">:</span><span class="w"></span>
 <span class="w">    </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS::DynamoDB::Table</span><span class="w"></span>
 <span class="w">    </span><span class="nt">Properties</span><span class="p">:</span><span class="w"></span>
@@ -1296,13 +1301,14 @@ times with the same parameters</strong>. This makes idempotent operations safe t
 </span><span class="w">      </span><span class="nt">BillingMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PAY_PER_REQUEST</span><span class="w"></span>
 
 <span class="w">  </span><span class="nt">HelloWorldFunction</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS::Serverless::Function</span><span class="w"></span>
-<span class="w">  </span><span class="nt">Properties</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Runtime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python3.8</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
-<span class="hll"><span class="w">    </span><span class="nt">Policies</span><span class="p">:</span><span class="w"></span>
-</span><span class="hll"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">DynamoDBCrudPolicy</span><span class="p">:</span><span class="w"></span>
-</span><span class="hll"><span class="w">          </span><span class="nt">TableName</span><span class="p">:</span><span class="w"> </span><span class="kt">!Ref</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IdempotencyTable</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS::Serverless::Function</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Properties</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">CodeUri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">src/</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Handler</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app.lambda_handler</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Runtime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python3.9</span><span class="w"></span>
+<span class="hll"><span class="w">      </span><span class="nt">Policies</span><span class="p">:</span><span class="w"></span>
+</span><span class="hll"><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">DynamoDBCrudPolicy</span><span class="p">:</span><span class="w"></span>
+</span><span class="hll"><span class="w">            </span><span class="nt">TableName</span><span class="p">:</span><span class="w"> </span><span class="kt">!Ref</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IdempotencyTable</span><span class="w"></span>
 </span></code></pre></div>
 </td></tr></table>
 <details class="warning" open="open">
@@ -1335,22 +1341,14 @@ estimate the cost.</p>
 <span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-</span><span class="hll">    <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-</span><span class="hll"><span class="p">)</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
 </span>
 <span class="hll"><span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;IdempotencyTable&quot;</span><span class="p">)</span>
 </span>
+
 <span class="hll"><span class="nd">@idempotent</span><span class="p">(</span><span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="n">payment</span> <span class="o">=</span> <span class="n">create_subscription_payment</span><span class="p">(</span>
-        <span class="n">user</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">],</span>
-        <span class="n">product</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;product_id&#39;</span><span class="p">]</span>
-    <span class="p">)</span>
+    <span class="n">payment</span> <span class="o">=</span> <span class="n">create_subscription_payment</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">],</span> <span class="n">product</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;product_id&quot;</span><span class="p">])</span>
     <span class="o">...</span>
 <span class="hll">    <span class="k">return</span> <span class="p">{</span>
 </span>        <span class="s2">&quot;payment_id&quot;</span><span class="p">:</span> <span class="n">payment</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
@@ -1373,7 +1371,7 @@ estimate the cost.</p>
 </div>
 </div>
 </div>
-<h3 id="idempotent_function-decorator">Idempotent_function decorator<a class="headerlink" href="#idempotent_function-decorator" title="Permanent link">&para;</a></h3>
+<h3 id="idempotent-function-decorator">Idempotent function decorator<a class="headerlink" href="#idempotent-function-decorator" title="Permanent link">&para;</a></h3>
 <p>Similar to <a href="#idempotent-decorator">idempotent decorator</a>, you can use <code>idempotent_function</code> decorator for any synchronous Python function.</p>
 <p>When using <code>idempotent_function</code>, you must tell us which keyword parameter in your function signature has the data we should use via <strong><code>data_keyword_argument</code></strong>.</p>
 <div class="admonition info">
@@ -1413,19 +1411,13 @@ estimate the cost.</p>
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.batch</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BatchProcessor</span><span class="p">,</span> <span class="n">EventType</span><span class="p">,</span>
-                                                   <span class="n">batch_processor</span><span class="p">)</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.batch</span> <span class="kn">import</span> <span class="n">BatchProcessor</span><span class="p">,</span> <span class="n">EventType</span><span class="p">,</span> <span class="n">batch_processor</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.data_classes.sqs_event</span> <span class="kn">import</span> <span class="n">SQSRecord</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-</span><span class="hll">    <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent_function</span><span class="p">)</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent_function</span>
 </span>
-
 <span class="n">processor</span> <span class="o">=</span> <span class="n">BatchProcessor</span><span class="p">(</span><span class="n">event_type</span><span class="o">=</span><span class="n">EventType</span><span class="o">.</span><span class="n">SQS</span><span class="p">)</span>
 <span class="n">dynamodb</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;idem&quot;</span><span class="p">)</span>
-<span class="n">config</span> <span class="o">=</span>  <span class="n">IdempotencyConfig</span><span class="p">(</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">IdempotencyConfig</span><span class="p">(</span>
     <span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;messageId&quot;</span><span class="p">,</span>  <span class="c1"># see Choosing a payload subset section</span>
     <span class="n">use_local_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1536,21 +1528,23 @@ estimate the cost.</p>
 <span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
-<span class="normal">32</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="normal">32</span>
+<span class="normal">33</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 
-<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-</span><span class="hll">    <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent_function</span><span class="p">)</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent_function</span>
 </span>
 <span class="n">dynamodb</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;idem&quot;</span><span class="p">)</span>
-<span class="n">config</span> <span class="o">=</span>  <span class="n">IdempotencyConfig</span><span class="p">(</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">IdempotencyConfig</span><span class="p">(</span>
     <span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;order_id&quot;</span><span class="p">,</span>  <span class="c1"># see Choosing a payload subset section</span>
     <span class="n">use_local_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
+
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">OrderItem</span><span class="p">:</span>
     <span class="n">sku</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">Order</span><span class="p">:</span>
@@ -1601,13 +1595,11 @@ estimate the cost.</p>
 <span class="normal">27</span>
 <span class="normal">28</span>
 <span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-</span><span class="hll">    <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent_function</span><span class="p">)</span>
+<span class="normal">30</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent_function</span>
 </span><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
 <span class="n">dynamodb</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;idem&quot;</span><span class="p">)</span>
-<span class="n">config</span> <span class="o">=</span>  <span class="n">IdempotencyConfig</span><span class="p">(</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">IdempotencyConfig</span><span class="p">(</span>
     <span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;order_id&quot;</span><span class="p">,</span>  <span class="c1"># see Choosing a payload subset section</span>
     <span class="n">use_local_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1676,14 +1668,9 @@ estimate the cost.</p>
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-</span><span class="hll">    <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-</span><span class="hll"><span class="p">)</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent</span>
 </span>
 <span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;IdempotencyTable&quot;</span><span class="p">)</span>
 
@@ -1691,20 +1678,17 @@ estimate the cost.</p>
 <span class="c1"># in the event json object as our payload</span>
 <span class="hll"><span class="n">config</span> <span class="o">=</span> <span class="n">IdempotencyConfig</span><span class="p">(</span><span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;powertools_json(body)&quot;</span><span class="p">)</span>
 </span>
+
 <span class="hll"><span class="nd">@idempotent</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="n">body</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">])</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">])</span>
 <span class="hll">    <span class="n">payment</span> <span class="o">=</span> <span class="n">create_subscription_payment</span><span class="p">(</span>
-</span>        <span class="n">user</span><span class="o">=</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">],</span>
-        <span class="n">product</span><span class="o">=</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;product_id&#39;</span><span class="p">]</span>
+</span>        <span class="n">user</span><span class="o">=</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">],</span>
+        <span class="n">product</span><span class="o">=</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;product_id&quot;</span><span class="p">],</span>
     <span class="p">)</span>
     <span class="o">...</span>
-<span class="hll">    <span class="k">return</span> <span class="p">{</span>
-</span>        <span class="s2">&quot;payment_id&quot;</span><span class="p">:</span> <span class="n">payment</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span>
-    <span class="p">}</span>
-</code></pre></div>
+<span class="hll">    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;payment_id&quot;</span><span class="p">:</span> <span class="n">payment</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">}</span>
+</span></code></pre></div>
 </td></tr></table>
 </div>
 <div class="tabbed-block">
@@ -1801,7 +1785,23 @@ This means that new invocations will execute your code again despite having the 
 <span class="normal">13</span>
 <span class="normal">14</span>
 <span class="normal">15</span>
-<span class="normal">16</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent_function</span>
+
+<span class="n">dynamodb</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;idem&quot;</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">IdempotencyConfig</span><span class="p">(</span><span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;order_id&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
 <span class="hll">    <span class="c1"># If an exception is raised here, no idempotent record will ever get created as the</span>
 </span><span class="hll">    <span class="c1"># idempotent function does not get called</span>
 </span><span class="hll">    <span class="n">do_some_stuff</span><span class="p">()</span>
@@ -1815,7 +1815,7 @@ This means that new invocations will execute your code again despite having the 
 
 <span class="nd">@idempotent_function</span><span class="p">(</span><span class="n">data_keyword_argument</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">dynamodb</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">call_external_service</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://example.com&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">],</span> <span class="s2">&quot;transaction_id&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]}</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;http://example.com&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">],</span> <span class="s2">&quot;transaction_id&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]})</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 </code></pre></div>
 </td></tr></table>
@@ -1983,16 +1983,14 @@ This means that new invocations will execute your code again despite having the 
 <span class="normal"> 9</span>
 <span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-<span class="p">)</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent</span>
 
 <span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;IdempotencyTable&quot;</span><span class="p">)</span>
-<span class="n">config</span> <span class="o">=</span>  <span class="n">IdempotencyConfig</span><span class="p">(</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">IdempotencyConfig</span><span class="p">(</span>
     <span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;body&quot;</span><span class="p">,</span>
 <span class="hll">    <span class="n">use_local_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 </span><span class="p">)</span>
+
 
 <span class="hll"><span class="nd">@idempotent</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -2018,16 +2016,14 @@ This means that new invocations will execute your code again despite having the 
 <span class="normal"> 9</span>
 <span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-<span class="p">)</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent</span>
 
 <span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;IdempotencyTable&quot;</span><span class="p">)</span>
-<span class="n">config</span> <span class="o">=</span>  <span class="n">IdempotencyConfig</span><span class="p">(</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">IdempotencyConfig</span><span class="p">(</span>
     <span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;body&quot;</span><span class="p">,</span>
-<span class="hll">    <span class="n">expires_after_seconds</span><span class="o">=</span><span class="mi">5</span><span class="o">*</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># 5 minutes</span>
+<span class="hll">    <span class="n">expires_after_seconds</span><span class="o">=</span><span class="mi">5</span> <span class="o">*</span> <span class="mi">60</span><span class="p">,</span>  <span class="c1"># 5 minutes</span>
 </span><span class="p">)</span>
+
 
 <span class="hll"><span class="nd">@idempotent</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -2073,32 +2069,30 @@ This means that new invocations will execute your code again despite having the 
 <span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-<span class="p">)</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">IdempotencyConfig</span><span class="p">(</span>
     <span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;[userDetail, productId]&quot;</span><span class="p">,</span>
-<span class="hll">    <span class="n">payload_validation_jmespath</span><span class="o">=</span><span class="s2">&quot;amount&quot;</span>
+<span class="hll">    <span class="n">payload_validation_jmespath</span><span class="o">=</span><span class="s2">&quot;amount&quot;</span><span class="p">,</span>
 </span><span class="p">)</span>
 <span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;IdempotencyTable&quot;</span><span class="p">)</span>
+
 
 <span class="hll"><span class="nd">@idempotent</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
     <span class="c1"># Creating a subscription payment is a side</span>
     <span class="c1"># effect of calling this function!</span>
     <span class="n">payment</span> <span class="o">=</span> <span class="n">create_subscription_payment</span><span class="p">(</span>
-      <span class="n">user</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;userDetail&#39;</span><span class="p">][</span><span class="s1">&#39;username&#39;</span><span class="p">],</span>
-      <span class="n">product</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;product_id&#39;</span><span class="p">],</span>
-<span class="hll">      <span class="n">amount</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;amount&#39;</span><span class="p">]</span>
+        <span class="n">user</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;userDetail&quot;</span><span class="p">][</span><span class="s2">&quot;username&quot;</span><span class="p">],</span>
+        <span class="n">product</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;product_id&quot;</span><span class="p">],</span>
+<span class="hll">        <span class="n">amount</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;amount&quot;</span><span class="p">],</span>
 </span>    <span class="p">)</span>
     <span class="o">...</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
         <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
         <span class="s2">&quot;payment_id&quot;</span><span class="p">:</span> <span class="n">payment</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-<span class="hll">        <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="n">payment</span><span class="o">.</span><span class="n">amount</span>
+<span class="hll">        <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="n">payment</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span>
 </span>    <span class="p">}</span>
 </code></pre></div>
 </td></tr></table>
@@ -2173,10 +2167,7 @@ This means that new invocations will execute your code again despite having the 
 <span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-<span class="p">)</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent</span>
 
 <span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;IdempotencyTable&quot;</span><span class="p">)</span>
 
@@ -2186,9 +2177,10 @@ This means that new invocations will execute your code again despite having the 
 </span><span class="hll">    <span class="n">raise_on_no_idempotency_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 </span><span class="p">)</span>
 
+
 <span class="hll"><span class="nd">@idempotent</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="k">pass</span>
+    <span class="o">...</span>
 </code></pre></div>
 </td></tr></table>
 </div>
@@ -2250,21 +2242,21 @@ This means that new invocations will execute your code again despite having the 
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">import</span> <span class="nn">boto3</span>
-</span><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-<span class="p">)</span>
+</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent</span>
 
 <span class="hll"><span class="n">boto3_session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
 </span><span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span>
     <span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;IdempotencyTable&quot;</span><span class="p">,</span>
-<span class="hll">    <span class="n">boto3_session</span><span class="o">=</span><span class="n">boto3_session</span>
+<span class="hll">    <span class="n">boto3_session</span><span class="o">=</span><span class="n">boto3_session</span><span class="p">,</span>
 </span><span class="p">)</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">IdempotencyConfig</span><span class="p">(</span><span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;body&quot;</span><span class="p">)</span>
 
+
 <span class="hll"><span class="nd">@idempotent</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-   <span class="o">...</span>
+    <span class="o">...</span>
 </code></pre></div>
 </td></tr></table>
 </div>
@@ -2284,20 +2276,20 @@ This means that new invocations will execute your code again despite having the 
 <span class="normal">13</span>
 <span class="normal">14</span>
 <span class="normal">15</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">botocore.config</span> <span class="kn">import</span> <span class="n">Config</span>
-</span><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-<span class="p">)</span>
+</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">IdempotencyConfig</span><span class="p">(</span><span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;body&quot;</span><span class="p">)</span>
 <span class="hll"><span class="n">boto_config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
 </span><span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span>
     <span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;IdempotencyTable&quot;</span><span class="p">,</span>
-<span class="hll">    <span class="n">boto_config</span><span class="o">=</span><span class="n">boto_config</span>
+<span class="hll">    <span class="n">boto_config</span><span class="o">=</span><span class="n">boto_config</span><span class="p">,</span>
 </span><span class="p">)</span>
 
-<span class="nd">@idempotent</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-   <span class="o">...</span>
+
+<span class="hll"><span class="nd">@idempotent</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
+</span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="o">...</span>
 </code></pre></div>
 </td></tr></table>
 </div>
@@ -2316,16 +2308,18 @@ This means that new invocations will execute your code again despite having the 
 <span class="normal"> 7</span>
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
-<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
 
 <span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span>
     <span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;IdempotencyTable&quot;</span><span class="p">,</span>
-<span class="hll">    <span class="n">sort_key_attr</span><span class="o">=</span><span class="s1">&#39;sort_key&#39;</span><span class="p">)</span>
-</span>
+<span class="hll">    <span class="n">sort_key_attr</span><span class="o">=</span><span class="s2">&quot;sort_key&quot;</span><span class="p">,</span>
+</span><span class="p">)</span>
+
 
 <span class="nd">@idempotent</span><span class="p">(</span><span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">][</span><span class="s1">&#39;id]}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]}</span>
 </code></pre></div>
 </td></tr></table>
 <p>The example function above would cause data to be stored in DynamoDB like this:</p>
@@ -2617,7 +2611,7 @@ This means that new invocations will execute your code again despite having the 
 
 <span class="hll">    <span class="k">def</span> <span class="nf">_delete_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_record</span><span class="p">:</span> <span class="n">DataRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deleting record for idempotency key: </span><span class="si">{</span><span class="n">data_record</span><span class="o">.</span><span class="n">idempotency_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">delete_item</span><span class="p">(</span><span class="n">Key</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key_attr</span><span class="p">:</span> <span class="n">data_record</span><span class="o">.</span><span class="n">idempotency_key</span><span class="p">},)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">delete_item</span><span class="p">(</span><span class="n">Key</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key_attr</span><span class="p">:</span> <span class="n">data_record</span><span class="o">.</span><span class="n">idempotency_key</span><span class="p">})</span>
 </code></pre></div>
 </td></tr></table>
 <details class="danger" open="open">
@@ -2645,20 +2639,18 @@ event - not the "raw" event Lambda was invoked with.</p>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.validation</span> <span class="kn">import</span> <span class="n">validator</span><span class="p">,</span> <span class="n">envelopes</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-<span class="p">)</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.validation</span> <span class="kn">import</span> <span class="n">envelopes</span><span class="p">,</span> <span class="n">validator</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">IdempotencyConfig</span><span class="p">(</span><span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;[message, username]&quot;</span><span class="p">)</span>
 <span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;IdempotencyTable&quot;</span><span class="p">)</span>
 
+
 <span class="hll"><span class="nd">@validator</span><span class="p">(</span><span class="n">envelope</span><span class="o">=</span><span class="n">envelopes</span><span class="o">.</span><span class="n">API_GATEWAY_HTTP</span><span class="p">)</span>
 </span><span class="hll"><span class="nd">@idempotent</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="n">cause_some_side_effects</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">],</span> <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">}</span>
+    <span class="n">cause_some_side_effects</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">],</span> <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">}</span>
 </code></pre></div>
 </td></tr></table>
 <details class="tip" open="open">
@@ -2678,7 +2670,13 @@ with a truthy value. If you prefer setting this for specific tests, and are usin
 <span class="normal">3</span>
 <span class="normal">4</span>
 <span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_idempotent_lambda_handler</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">handler</span>
+
+
+<span class="k">def</span> <span class="nf">test_idempotent_lambda_handler</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
 <span class="hll">    <span class="c1"># Set POWERTOOLS_IDEMPOTENCY_DISABLED before calling decorated functions</span>
 </span><span class="hll">    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setenv</span><span class="p">(</span><span class="s2">&quot;POWERTOOLS_IDEMPOTENCY_DISABLED&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </span>
@@ -2700,16 +2698,14 @@ with a truthy value. If you prefer setting this for specific tests, and are usin
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-<span class="p">)</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
 
 <span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;idempotency&quot;</span><span class="p">)</span>
 
+
 <span class="nd">@idempotent</span><span class="p">(</span><span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;expensive operation&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;expensive operation&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;payment_id&quot;</span><span class="p">:</span> <span class="mi">12345</span><span class="p">,</span>
         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
@@ -2736,18 +2732,18 @@ with a truthy value. If you prefer setting this for specific tests, and are usin
 <span class="normal"> 9</span>
 <span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">app</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
 
-<span class="kn">import</span> <span class="nn">app</span>
 
 <span class="k">def</span> <span class="nf">test_idempotent_lambda</span><span class="p">():</span>
 <span class="hll">    <span class="c1"># Create our own Table resource using the endpoint for our DynamoDB Local instance</span>
-</span><span class="hll">    <span class="n">resource</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s2">&quot;dynamodb&quot;</span><span class="p">,</span> <span class="n">endpoint_url</span><span class="o">=</span><span class="s1">&#39;http://localhost:8000&#39;</span><span class="p">)</span>
+</span><span class="hll">    <span class="n">resource</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s2">&quot;dynamodb&quot;</span><span class="p">,</span> <span class="n">endpoint_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000&quot;</span><span class="p">)</span>
 </span><span class="hll">    <span class="n">table</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">persistence_layer</span><span class="o">.</span><span class="n">table_name</span><span class="p">)</span>
 </span>    <span class="n">app</span><span class="o">.</span><span class="n">persistence_layer</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span>
 
-    <span class="n">result</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">handler</span><span class="p">({</span><span class="s1">&#39;testkey&#39;</span><span class="p">:</span> <span class="s1">&#39;testvalue&#39;</span><span class="p">},</span> <span class="p">{})</span>
-    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;payment_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">12345</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">handler</span><span class="p">({</span><span class="s2">&quot;testkey&quot;</span><span class="p">:</span> <span class="s2">&quot;testvalue&quot;</span><span class="p">},</span> <span class="p">{})</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;payment_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">12345</span>
 </code></pre></div>
 </td></tr></table>
 </div>
@@ -2764,16 +2760,14 @@ with a truthy value. If you prefer setting this for specific tests, and are usin
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-<span class="p">)</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
 
 <span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;idempotency&quot;</span><span class="p">)</span>
 
+
 <span class="nd">@idempotent</span><span class="p">(</span><span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;expensive operation&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;expensive operation&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;payment_id&quot;</span><span class="p">:</span> <span class="mi">12345</span><span class="p">,</span>
         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
@@ -2799,14 +2793,16 @@ This means it is possible to pass a mocked Table resource, or stub various metho
 <span class="normal"> 7</span>
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
-<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">MagicMock</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">MagicMock</span>
 
 <span class="kn">import</span> <span class="nn">app</span>
+
 
 <span class="k">def</span> <span class="nf">test_idempotent_lambda</span><span class="p">():</span>
 <span class="hll">    <span class="n">table</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
 </span><span class="hll">    <span class="n">app</span><span class="o">.</span><span class="n">persistence_layer</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span>
-</span><span class="hll">    <span class="n">result</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">handler</span><span class="p">({</span><span class="s1">&#39;testkey&#39;</span><span class="p">:</span> <span class="s1">&#39;testvalue&#39;</span><span class="p">},</span> <span class="p">{})</span>
+</span><span class="hll">    <span class="n">result</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">handler</span><span class="p">({</span><span class="s2">&quot;testkey&quot;</span><span class="p">:</span> <span class="s2">&quot;testvalue&quot;</span><span class="p">},</span> <span class="p">{})</span>
 </span><span class="hll">    <span class="n">table</span><span class="o">.</span><span class="n">put_item</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span>
 </span>    <span class="o">...</span>
 </code></pre></div>
@@ -2825,16 +2821,14 @@ This means it is possible to pass a mocked Table resource, or stub various metho
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-<span class="p">)</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
 
 <span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;idempotency&quot;</span><span class="p">)</span>
 
+
 <span class="nd">@idempotent</span><span class="p">(</span><span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;expensive operation&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;expensive operation&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;payment_id&quot;</span><span class="p">:</span> <span class="mi">12345</span><span class="p">,</span>
         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
@@ -2847,14 +2841,14 @@ This means it is possible to pass a mocked Table resource, or stub various metho
 </div>
 <h2 id="extra-resources">Extra resources<a class="headerlink" href="#extra-resources" title="Permanent link">&para;</a></h2>
 <p>If you're interested in a deep dive on how Amazon uses idempotency when building our APIs, check out
-<a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">this article</a>.</p>
+<a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/" target="_blank">this article</a>.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      2021-12-30
+      2022-03-13
     
   </small>
 </div>

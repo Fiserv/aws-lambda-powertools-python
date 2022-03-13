@@ -965,10 +965,8 @@
 <span class="normal">5</span>
 <span class="normal">6</span>
 <span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.jmespath_utils</span> <span class="kn">import</span> <span class="n">extract_data_from_envelope</span>
-</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.typing</span> <span class="kn">import</span> <span class="n">LambdaContext</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.jmespath_utils</span> <span class="kn">import</span> <span class="n">extract_data_from_envelope</span>
+</span><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.typing</span> <span class="kn">import</span> <span class="n">LambdaContext</span>
 
 
 <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">LambdaContext</span><span class="p">):</span>
@@ -1001,10 +999,8 @@
 <span class="normal">5</span>
 <span class="normal">6</span>
 <span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.jmespath_utils</span> <span class="kn">import</span> <span class="n">extract_data_from_envelope</span><span class="p">,</span> <span class="n">envelopes</span>
-</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.typing</span> <span class="kn">import</span> <span class="n">LambdaContext</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.jmespath_utils</span> <span class="kn">import</span> <span class="n">envelopes</span><span class="p">,</span> <span class="n">extract_data_from_envelope</span>
+</span><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.typing</span> <span class="kn">import</span> <span class="n">LambdaContext</span>
 
 
 <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">LambdaContext</span><span class="p">):</span>
@@ -1126,12 +1122,12 @@
 <span class="normal">6</span>
 <span class="normal">7</span>
 <span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.validation</span> <span class="kn">import</span> <span class="n">validate</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">schemas</span>
 
-<span class="kn">import</span> <span class="nn">schemas</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.validation</span> <span class="kn">import</span> <span class="n">validate</span>
 
 <span class="n">sample_event</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="s1">&#39;{&quot;payload&quot;: {&quot;message&quot;: &quot;hello hello&quot;, &quot;username&quot;: &quot;blah blah&quot;}}&#39;</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="s1">&#39;{&quot;payload&quot;: {&quot;message&quot;: &quot;hello hello&quot;, &quot;username&quot;: &quot;blah blah&quot;}}&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="hll"><span class="n">validate</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">sample_event</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">schemas</span><span class="o">.</span><span class="n">INPUT</span><span class="p">,</span> <span class="n">envelope</span><span class="o">=</span><span class="s2">&quot;powertools_json(data)&quot;</span><span class="p">)</span>
@@ -1246,32 +1242,32 @@
 <span class="normal">19</span>
 <span class="normal">20</span>
 <span class="normal">21</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">idempotent</span>
-<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.idempotency</span> <span class="kn">import</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">,</span> <span class="n">IdempotencyConfig</span><span class="p">,</span> <span class="n">idempotent</span>
 
 <span class="n">persistence_layer</span> <span class="o">=</span> <span class="n">DynamoDBPersistenceLayer</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;IdempotencyTable&quot;</span><span class="p">)</span>
 <span class="hll"><span class="n">config</span> <span class="o">=</span> <span class="n">IdempotencyConfig</span><span class="p">(</span><span class="n">event_key_jmespath</span><span class="o">=</span><span class="s2">&quot;powertools_json(body)&quot;</span><span class="p">)</span>
 </span>
+
 <span class="nd">@idempotent</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">persistence_store</span><span class="o">=</span><span class="n">persistence_layer</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">:</span><span class="n">APIGatewayProxyEvent</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="n">body</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">])</span>
     <span class="n">payment</span> <span class="o">=</span> <span class="n">create_subscription_payment</span><span class="p">(</span>
-        <span class="n">user</span><span class="o">=</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">],</span>
-        <span class="n">product</span><span class="o">=</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;product_id&#39;</span><span class="p">]</span>
+        <span class="n">user</span><span class="o">=</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">],</span>
+        <span class="n">product</span><span class="o">=</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;product_id&quot;</span><span class="p">],</span>
     <span class="p">)</span>
     <span class="o">...</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;payment_id&quot;</span><span class="p">:</span> <span class="n">payment</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
         <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span>
+        <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
     <span class="p">}</span>
 </code></pre></div>
 </td></tr></table>
 <h4 id="powertools_base64-function">powertools_base64 function<a class="headerlink" href="#powertools_base64-function" title="Permanent link">&para;</a></h4>
 <p>Use <code>powertools_base64</code> function to decode any base64 data.</p>
 <p>This sample will decode the base64 value within the <code>data</code> key, and decode the JSON string into a valid JSON before we can validate it.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">powertools_json_jmespath_function.py</label><label for="__tabbed_4_2">schemas.py</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">powertools_base64_jmespath_function.py</label><label for="__tabbed_4_2">schemas.py</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
@@ -1286,18 +1282,18 @@
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.validation</span> <span class="kn">import</span> <span class="n">validate</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">schemas</span>
 
-<span class="kn">import</span> <span class="nn">schemas</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.validation</span> <span class="kn">import</span> <span class="n">validate</span>
 
 <span class="n">sample_event</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;eyJtZXNzYWdlIjogImhlbGxvIGhlbGxvIiwgInVzZXJuYW1lIjogImJsYWggYmxhaCJ9=&quot;</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;eyJtZXNzYWdlIjogImhlbGxvIGhlbGxvIiwgInVzZXJuYW1lIjogImJsYWggYmxhaCJ9=&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">validate</span><span class="p">(</span>
-      <span class="n">event</span><span class="o">=</span><span class="n">sample_event</span><span class="p">,</span>
-      <span class="n">schema</span><span class="o">=</span><span class="n">schemas</span><span class="o">.</span><span class="n">INPUT</span><span class="p">,</span>
-<span class="hll">      <span class="n">envelope</span><span class="o">=</span><span class="s2">&quot;powertools_json(powertools_base64(data))&quot;</span>
+    <span class="n">event</span><span class="o">=</span><span class="n">sample_event</span><span class="p">,</span>
+    <span class="n">schema</span><span class="o">=</span><span class="n">schemas</span><span class="o">.</span><span class="n">INPUT</span><span class="p">,</span>
+<span class="hll">    <span class="n">envelope</span><span class="o">=</span><span class="s2">&quot;powertools_json(powertools_base64(data))&quot;</span><span class="p">,</span>
 </span><span class="p">)</span>
 </code></pre></div>
 </td></tr></table>
@@ -1388,7 +1384,7 @@
 <h4 id="powertools_base64_gzip-function">powertools_base64_gzip function<a class="headerlink" href="#powertools_base64_gzip-function" title="Permanent link">&para;</a></h4>
 <p>Use <code>powertools_base64_gzip</code> function to decompress and decode base64 data.</p>
 <p>This sample will decompress and decode base64 data, then use JMESPath pipeline expression to pass the result for decoding its JSON string.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">powertools_json_jmespath_function.py</label><label for="__tabbed_5_2">schemas.py</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">powertools_base64_gzip_jmespath_function.py</label><label for="__tabbed_5_2">schemas.py</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
@@ -1403,9 +1399,9 @@
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.validation</span> <span class="kn">import</span> <span class="n">validate</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">schemas</span>
 
-<span class="kn">import</span> <span class="nn">schemas</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.validation</span> <span class="kn">import</span> <span class="n">validate</span>
 
 <span class="n">sample_event</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;H4sIACZAXl8C/52PzUrEMBhFX2UILpX8tPbHXWHqIOiq3Q1F0ubrWEiakqTWofTdTYYB0YWL2d5zvnuTFellBIOedoiyKH5M0iwnlKH7HZL6dDB6ngLDfLFYctUKjie9gHFaS/sAX1xNEq525QxwFXRGGMEkx4Th491rUZdV3YiIZ6Ljfd+lfSyAtZloacQgAkqSJCGhxM6t7cwwuUGPz4N0YKyvO6I9WDeMPMSo8Z4Ca/kJ6vMEYW5f1MX7W1lVxaG8vqX8hNFdjlc0iCBBSF4ERT/3Pl7RbMGMXF2KZMh/C+gDpNS7RRsp0OaRGzx0/t8e0jgmcczyLCWEePhni/23JWalzjdu0a3ZvgEaNLXeugEAAA==&quot;</span>
@@ -1414,7 +1410,7 @@
 <span class="n">validate</span><span class="p">(</span>
     <span class="n">event</span><span class="o">=</span><span class="n">sample_event</span><span class="p">,</span>
     <span class="n">schema</span><span class="o">=</span><span class="n">schemas</span><span class="o">.</span><span class="n">INPUT</span><span class="p">,</span>
-<span class="hll">    <span class="n">envelope</span><span class="o">=</span><span class="s2">&quot;powertools_base64_gzip(data) | powertools_json(@)&quot;</span>
+<span class="hll">    <span class="n">envelope</span><span class="o">=</span><span class="s2">&quot;powertools_base64_gzip(data) | powertools_json(@)&quot;</span><span class="p">,</span>
 </span><span class="p">)</span>
 </code></pre></div>
 </td></tr></table>
@@ -1529,24 +1525,32 @@
 <span class="normal">15</span>
 <span class="normal">16</span>
 <span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.jmespath_utils</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="hll">    <span class="n">PowertoolsFunctions</span><span class="p">,</span> <span class="n">extract_data_from_envelope</span><span class="p">)</span>
-</span><span class="hll"><span class="kn">from</span> <span class="nn">jmespath.functions</span> <span class="kn">import</span> <span class="n">signature</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="kn">from</span> <span class="nn">jmespath.functions</span> <span class="kn">import</span> <span class="n">signature</span>
+</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.jmespath_utils</span> <span class="kn">import</span> <span class="n">PowertoolsFunctions</span><span class="p">,</span> <span class="n">extract_data_from_envelope</span>
 </span>
 
 <span class="hll"><span class="k">class</span> <span class="nc">CustomFunctions</span><span class="p">(</span><span class="n">PowertoolsFunctions</span><span class="p">):</span>
-</span><span class="hll">    <span class="nd">@signature</span><span class="p">({</span><span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;string&#39;</span><span class="p">]})</span>  <span class="c1"># Only decode if value is a string</span>
+</span><span class="hll">    <span class="nd">@signature</span><span class="p">({</span><span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]})</span>  <span class="c1"># Only decode if value is a string</span>
 </span><span class="hll">    <span class="k">def</span> <span class="nf">_func_special_decoder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
 </span><span class="hll">        <span class="k">return</span> <span class="n">my_custom_decoder_logic</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 </span>
+
 <span class="hll"><span class="n">custom_jmespath_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;custom_functions&quot;</span><span class="p">:</span> <span class="n">CustomFunctions</span><span class="p">()}</span>
 </span>
+
 <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
     <span class="c1"># use the custom name after `_func_`</span>
-    <span class="n">extract_data_from_envelope</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">event</span><span class="p">,</span>
-                              <span class="n">envelope</span><span class="o">=</span><span class="s2">&quot;special_decoder(body)&quot;</span><span class="p">,</span>
-<span class="hll">                              <span class="n">jmespath_options</span><span class="o">=**</span><span class="n">custom_jmespath_options</span><span class="p">)</span>
-</span>    <span class="o">...</span>
+    <span class="n">extract_data_from_envelope</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">event</span><span class="p">,</span>
+        <span class="n">envelope</span><span class="o">=</span><span class="s2">&quot;special_decoder(body)&quot;</span><span class="p">,</span>
+<span class="hll">        <span class="n">jmespath_options</span><span class="o">=</span><span class="n">custom_jmespath_options</span><span class="p">,</span>
+</span>    <span class="p">)</span>
+    <span class="o">...</span>
 </code></pre></div>
 </td></tr></table>
 </div>
@@ -1563,7 +1567,7 @@
   <small>
     
       Last update:
-      2021-12-30
+      2022-03-09
     
   </small>
 </div>

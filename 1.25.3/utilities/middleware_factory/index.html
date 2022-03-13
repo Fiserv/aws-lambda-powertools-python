@@ -854,7 +854,10 @@
 <span class="normal"> 9</span>
 <span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.middleware_factory</span> <span class="kn">import</span> <span class="n">lambda_handler_decorator</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.middleware_factory</span> <span class="kn">import</span> <span class="n">lambda_handler_decorator</span>
+
 
 <span class="hll"><span class="nd">@lambda_handler_decorator</span>
 </span><span class="hll"><span class="k">def</span> <span class="nf">middleware_before_after</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -862,6 +865,7 @@
     <span class="n">response</span> <span class="o">=</span> <span class="n">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
     <span class="c1"># logic_after_handler_execution()</span>
     <span class="k">return</span> <span class="n">response</span>
+
 
 <span class="hll"><span class="nd">@middleware_before_after</span>
 </span><span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -882,7 +886,18 @@
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nd">@lambda_handler_decorator</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.middleware_factory</span> <span class="kn">import</span> <span class="n">lambda_handler_decorator</span>
+
+
+<span class="nd">@lambda_handler_decorator</span>
 <span class="hll"><span class="k">def</span> <span class="nf">obfuscate_sensitive_data</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 </span>    <span class="c1"># Obfuscate email before calling Lambda handler</span>
     <span class="k">if</span> <span class="n">fields</span><span class="p">:</span>
@@ -892,27 +907,32 @@
 
     <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
-<span class="nd">@obfuscate_sensitive_data</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">])</span>
-<span class="hll"><span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-</span>    <span class="o">...</span>
+
+<span class="hll"><span class="nd">@obfuscate_sensitive_data</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">])</span>
+</span><span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="o">...</span>
 </code></pre></div>
 </td></tr></table>
 <h2 id="tracing-middleware-execution">Tracing middleware execution<a class="headerlink" href="#tracing-middleware-execution" title="Permanent link">&para;</a></h2>
 <p>If you are making use of <a href="../../core/tracer/">Tracer</a>, you can trace the execution of your middleware to ease operations.</p>
 <p>This makes use of an existing Tracer instance that you may have initialized anywhere in your code.</p>
-<table class="highlighttable"><tr><th colspan="2" class="filename"><div class="highlight"><span class="filename">Tracing custom middlewares with Tracer</span></div></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.middleware_factory</span> <span class="kn">import</span> <span class="n">lambda_handler_decorator</span>
+<table class="highlighttable"><tr><th colspan="2" class="filename"><div class="highlight"><span class="filename">Tracing custom middlewares with Tracer</span></div></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.middleware_factory</span> <span class="kn">import</span> <span class="n">lambda_handler_decorator</span>
+
 
 <span class="hll"><span class="nd">@lambda_handler_decorator</span><span class="p">(</span><span class="n">trace_execution</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span><span class="k">def</span> <span class="nf">my_middleware</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
 
 <span class="nd">@my_middleware</span>
 <span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -921,16 +941,18 @@
 </td></tr></table>
 <p>When executed, your middleware name will <a href="../../core/tracer/">appear in AWS X-Ray Trace details as</a> <code>## middleware_name</code>.</p>
 <p>For advanced use cases, you can instantiate <a href="../../core/tracer/">Tracer</a> inside your middleware, and add annotations as well as metadata for additional operational insights.</p>
-<table class="highlighttable"><tr><th colspan="2" class="filename"><div class="highlight"><span class="filename">Add custom tracing insights before/after in your middlware</span></div></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.middleware_factory</span> <span class="kn">import</span> <span class="n">lambda_handler_decorator</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Tracer</span>
+<table class="highlighttable"><tr><th colspan="2" class="filename"><div class="highlight"><span class="filename">Add custom tracing insights before/after in your middlware</span></div></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools</span> <span class="kn">import</span> <span class="n">Tracer</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.middleware_factory</span> <span class="kn">import</span> <span class="n">lambda_handler_decorator</span>
+
 
 <span class="nd">@lambda_handler_decorator</span><span class="p">(</span><span class="n">trace_execution</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">middleware_name</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -953,7 +975,7 @@
   <small>
     
       Last update:
-      2021-12-30
+      2022-03-09
     
   </small>
 </div>
