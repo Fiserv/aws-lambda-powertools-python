@@ -1045,19 +1045,25 @@
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
 
 <span class="k">class</span> <span class="nc">OrderItem</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">quantity</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
 
+
 <span class="k">class</span> <span class="nc">Order</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]</span> <span class="c1"># nesting models are supported</span>
-    <span class="n">optional_field</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="c1"># this field may or may not be available when parsing</span>
+    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]</span>  <span class="c1"># nesting models are supported</span>
+    <span class="n">optional_field</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># this field may or may not be available when parsing</span>
 </code></pre></div>
 </td></tr></table>
 <p>These are simply Python classes that inherit from BaseModel. <strong>Parser</strong> enforces type hints declared in your model at runtime.</p>
@@ -1110,32 +1116,38 @@
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">event_parser</span><span class="p">,</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.typing</span> <span class="kn">import</span> <span class="n">LambdaContext</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">event_parser</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.typing</span> <span class="kn">import</span> <span class="n">LambdaContext</span>
+
 
 <span class="k">class</span> <span class="nc">OrderItem</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">quantity</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
 
+
 <span class="k">class</span> <span class="nc">Order</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]</span> <span class="c1"># nesting models are supported</span>
-    <span class="n">optional_field</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="c1"># this field may or may not be available when parsing</span>
+    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]</span>  <span class="c1"># nesting models are supported</span>
+    <span class="n">optional_field</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># this field may or may not be available when parsing</span>
 
-<span class="hll">
-</span><span class="nd">@event_parser</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">Order</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">Order</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">LambdaContext</span><span class="p">):</span>
+
+<span class="hll"><span class="nd">@event_parser</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">Order</span><span class="p">)</span>
+</span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">Order</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">LambdaContext</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
 
     <span class="n">order_items</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">items</span><span class="p">]</span>
     <span class="o">...</span>
+
 
 <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">10876546789</span><span class="p">,</span>
@@ -1144,13 +1156,13 @@
         <span class="p">{</span>
             <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1015938732</span><span class="p">,</span>
             <span class="s2">&quot;quantity&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;item xpto&quot;</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;item xpto&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
 <span class="p">}</span>
 
 <span class="n">handler</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">LambdaContext</span><span class="p">())</span>
-<span class="n">handler</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">),</span> <span class="n">context</span><span class="o">=</span><span class="n">LambdaContext</span><span class="p">())</span> <span class="c1"># also works if event is a JSON string</span>
+<span class="n">handler</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">),</span> <span class="n">context</span><span class="o">=</span><span class="n">LambdaContext</span><span class="p">())</span>  <span class="c1"># also works if event is a JSON string</span>
 </code></pre></div>
 </td></tr></table>
 <h3 id="parse-function">parse function<a class="headerlink" href="#parse-function" title="Permanent link">&para;</a></h3>
@@ -1192,19 +1204,23 @@
 <span class="normal">35</span>
 <span class="normal">36</span>
 <span class="normal">37</span>
-<span class="normal">38</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">parse</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="normal">38</span>
+<span class="normal">39</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">parse</span>
+
 
 <span class="k">class</span> <span class="nc">OrderItem</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">quantity</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
 
+
 <span class="k">class</span> <span class="nc">Order</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]</span> <span class="c1"># nesting models are supported</span>
-    <span class="n">optional_field</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="c1"># this field may or may not be available when parsing</span>
+    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]</span>  <span class="c1"># nesting models are supported</span>
+    <span class="n">optional_field</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># this field may or may not be available when parsing</span>
 
 
 <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
@@ -1215,21 +1231,19 @@
 <span class="hll">            <span class="c1"># this will cause a validation error</span>
 </span>            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1015938732</span><span class="p">],</span>
             <span class="s2">&quot;quantity&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;item xpto&quot;</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;item xpto&quot;</span><span class="p">,</span>
         <span class="p">}</span>
-    <span class="p">]</span>
+    <span class="p">],</span>
 <span class="p">}</span>
 
+
 <span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
-<span class="hll">    <span class="k">try</span><span class="p">:</span>
-</span>        <span class="n">parsed_payload</span><span class="p">:</span> <span class="n">Order</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Order</span><span class="p">)</span>
-        <span class="c1"># payload dict is now parsed into our model</span>
+    <span class="k">try</span><span class="p">:</span>
+<span class="hll">        <span class="n">parsed_payload</span><span class="p">:</span> <span class="n">Order</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Order</span><span class="p">)</span>
+</span>        <span class="c1"># payload dict is now parsed into our model</span>
         <span class="k">return</span> <span class="n">parsed_payload</span><span class="o">.</span><span class="n">items</span>
     <span class="k">except</span> <span class="n">ValidationError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span>
-            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid order&quot;</span>
-        <span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid order&quot;</span><span class="p">}</span>
 </code></pre></div>
 </td></tr></table>
 <h2 id="built-in-models">Built-in models<a class="headerlink" href="#built-in-models" title="Permanent link">&para;</a></h2>
@@ -1345,24 +1359,32 @@
 <span class="normal">45</span>
 <span class="normal">46</span>
 <span class="normal">47</span>
-<span class="normal">48</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">parse</span><span class="p">,</span> <span class="n">BaseModel</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">parse</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser.models</span> <span class="kn">import</span> <span class="n">EventBridgeModel</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="k">class</span> <span class="nc">OrderItem</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">quantity</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
 
+
 <span class="k">class</span> <span class="nc">Order</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]</span>
 
+
 <span class="hll"><span class="k">class</span> <span class="nc">OrderEventModel</span><span class="p">(</span><span class="n">EventBridgeModel</span><span class="p">):</span>
 </span><span class="hll">    <span class="n">detail</span><span class="p">:</span> <span class="n">Order</span>
 </span>
+
 <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;6a7e8feb-b491-4cf7-a9f1-bf3703467718&quot;</span><span class="p">,</span>
@@ -1379,17 +1401,17 @@
             <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1015938732</span><span class="p">,</span>
                 <span class="s2">&quot;quantity&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;item xpto&quot;</span>
-            <span class="p">}</span>
-        <span class="p">]</span>
-    <span class="p">}</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;item xpto&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
 <span class="p">}</span>
 
 <span class="hll"><span class="n">ret</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">OrderEventModel</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
 </span>
 <span class="k">assert</span> <span class="n">ret</span><span class="o">.</span><span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;OrderService&quot;</span>
 <span class="k">assert</span> <span class="n">ret</span><span class="o">.</span><span class="n">detail</span><span class="o">.</span><span class="n">description</span> <span class="o">==</span> <span class="s2">&quot;My order&quot;</span>
-<span class="k">assert</span> <span class="n">ret</span><span class="o">.</span><span class="n">detail_type</span> <span class="o">==</span> <span class="s2">&quot;OrderPurchased&quot;</span> <span class="c1"># we rename it to snake_case since detail-type is an invalid name</span>
+<span class="k">assert</span> <span class="n">ret</span><span class="o">.</span><span class="n">detail_type</span> <span class="o">==</span> <span class="s2">&quot;OrderPurchased&quot;</span>  <span class="c1"># we rename it to snake_case since detail-type is an invalid name</span>
 
 <span class="k">for</span> <span class="n">order_item</span> <span class="ow">in</span> <span class="n">ret</span><span class="o">.</span><span class="n">detail</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
     <span class="o">...</span>
@@ -1444,13 +1466,17 @@
 <span class="normal">30</span>
 <span class="normal">31</span>
 <span class="normal">32</span>
-<span class="normal">33</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">event_parser</span><span class="p">,</span> <span class="n">parse</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">envelopes</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">envelopes</span><span class="p">,</span> <span class="n">event_parser</span><span class="p">,</span> <span class="n">parse</span>
 <span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.typing</span> <span class="kn">import</span> <span class="n">LambdaContext</span>
+
 
 <span class="k">class</span> <span class="nc">UserModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">username</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">password1</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">password2</span><span class="p">:</span> <span class="nb">str</span>
+
 
 <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
@@ -1464,8 +1490,8 @@
 <span class="hll">    <span class="s2">&quot;detail&quot;</span><span class="p">:</span> <span class="p">{</span>
 </span><span class="hll">        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;universe&quot;</span><span class="p">,</span>
 </span><span class="hll">        <span class="s2">&quot;password1&quot;</span><span class="p">:</span> <span class="s2">&quot;myp@ssword&quot;</span><span class="p">,</span>
-</span><span class="hll">        <span class="s2">&quot;password2&quot;</span><span class="p">:</span> <span class="s2">&quot;repeat password&quot;</span>
-</span><span class="hll">    <span class="p">}</span>
+</span><span class="hll">        <span class="s2">&quot;password2&quot;</span><span class="p">:</span> <span class="s2">&quot;repeat password&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="p">},</span>
 </span><span class="p">}</span>
 
 <span class="hll"><span class="n">ret</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">UserModel</span><span class="p">,</span> <span class="n">envelope</span><span class="o">=</span><span class="n">envelopes</span><span class="o">.</span><span class="n">EventBridgeEnvelope</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
@@ -1610,16 +1636,16 @@
 <span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
-<span class="normal">26</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseEnvelope</span><span class="p">,</span> <span class="n">models</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser.models</span> <span class="kn">import</span> <span class="n">EventBridgeModel</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseEnvelope</span><span class="p">,</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser.models</span> <span class="kn">import</span> <span class="n">EventBridgeModel</span>
 
 <span class="n">Model</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;Model&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">BaseModel</span><span class="p">)</span>
 
+
 <span class="hll"><span class="k">class</span> <span class="nc">EventBridgeEnvelope</span><span class="p">(</span><span class="n">BaseEnvelope</span><span class="p">):</span>
-</span>
-<span class="hll">    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Model</span><span class="p">]:</span>
+</span><span class="hll">    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Model</span><span class="p">]:</span>
 </span>        <span class="sd">&quot;&quot;&quot;Parses data found with model provided</span>
 
 <span class="sd">        Parameters</span>
@@ -1677,16 +1703,20 @@
 <span class="normal"> 9</span>
 <span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">parse</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">validator</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">parse</span><span class="p">,</span> <span class="n">validator</span>
+
 
 <span class="k">class</span> <span class="nc">HelloWorldModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">message</span><span class="p">:</span> <span class="nb">str</span>
 
-<span class="hll">    <span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">)</span>
+<span class="hll">    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">)</span>
 </span>    <span class="k">def</span> <span class="nf">is_hello_world</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="s2">&quot;hello world&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Message must be hello world!&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">v</span>
+
 
 <span class="n">parse</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">HelloWorldModel</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;hello universe&quot;</span><span class="p">})</span>
 </code></pre></div>
@@ -1711,18 +1741,22 @@
 <span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
-<span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">parse</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">validator</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">parse</span><span class="p">,</span> <span class="n">validator</span>
+
 
 <span class="k">class</span> <span class="nc">HelloWorldModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">message</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">sender</span><span class="p">:</span> <span class="nb">str</span>
 
-<span class="hll">    <span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+<span class="hll">    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
 </span>    <span class="k">def</span> <span class="nf">has_whitespace</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39; &#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must have whitespace...&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">v</span>
+
 
 <span class="n">parse</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">HelloWorldModel</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;hello universe&quot;</span><span class="p">,</span> <span class="s2">&quot;sender&quot;</span><span class="p">:</span> <span class="s2">&quot;universe&quot;</span><span class="p">})</span>
 </code></pre></div>
@@ -1749,7 +1783,10 @@
 <span class="normal">18</span>
 <span class="normal">19</span>
 <span class="normal">20</span>
-<span class="normal">21</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">parse</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">root_validator</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">parse</span><span class="p">,</span> <span class="n">root_validator</span>
+
 
 <span class="k">class</span> <span class="nc">UserModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">username</span><span class="p">:</span> <span class="nb">str</span>
@@ -1758,15 +1795,16 @@
 
     <span class="nd">@root_validator</span>
     <span class="k">def</span> <span class="nf">check_passwords_match</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="n">pw1</span><span class="p">,</span> <span class="n">pw2</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;password1&#39;</span><span class="p">),</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;password2&#39;</span><span class="p">)</span>
+        <span class="n">pw1</span><span class="p">,</span> <span class="n">pw2</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;password1&quot;</span><span class="p">),</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;password2&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">pw1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">pw2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">pw1</span> <span class="o">!=</span> <span class="n">pw2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;passwords do not match&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;passwords do not match&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">values</span>
+
 
 <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;universe&quot;</span><span class="p">,</span>
     <span class="s2">&quot;password1&quot;</span><span class="p">:</span> <span class="s2">&quot;myp@ssword&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;password2&quot;</span><span class="p">:</span> <span class="s2">&quot;repeat password&quot;</span>
+    <span class="s2">&quot;password2&quot;</span><span class="p">:</span> <span class="s2">&quot;repeat password&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">parse</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">UserModel</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
@@ -1813,31 +1851,33 @@
 <span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">parse</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">validator</span>
+<span class="normal">31</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities.parser</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">parse</span><span class="p">,</span> <span class="n">validator</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
+
 
 <span class="k">class</span> <span class="nc">UserModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">username</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">password1</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">password2</span><span class="p">:</span> <span class="nb">str</span>
 
+
 <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;universe&quot;</span><span class="p">,</span>
     <span class="s2">&quot;password1&quot;</span><span class="p">:</span> <span class="s2">&quot;myp@ssword&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;password2&quot;</span><span class="p">:</span> <span class="s2">&quot;repeat password&quot;</span>
+    <span class="s2">&quot;password2&quot;</span><span class="p">:</span> <span class="s2">&quot;repeat password&quot;</span><span class="p">,</span>
 <span class="p">}</span>
+
 
 <span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">parse</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">UserModel</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <span class="hll">        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
-</span>        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span>
-            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid username&quot;</span>
-        <span class="p">}</span>
+</span>        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid username&quot;</span><span class="p">}</span>
+
 
 <span class="n">User</span><span class="p">:</span> <span class="n">UserModel</span> <span class="o">=</span> <span class="n">my_function</span><span class="p">()</span>
 <span class="hll"><span class="n">user_dict</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
@@ -1938,7 +1978,7 @@ Codes:
   <small>
     
       Last update:
-      2022-03-07
+      2022-03-14
     
   </small>
 </div>
