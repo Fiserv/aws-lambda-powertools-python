@@ -32,7 +32,7 @@ class SnsNotificationModel(BaseModel):
         sqs_rewritten_keys = ("UnsubscribeURL", "SigningCertURL")
         if any(key in sqs_rewritten_keys for key in values):
             values["UnsubscribeUrl"] = values.pop("UnsubscribeURL")
-            values["SigningCertUrl"] = values.pop("SigningCertURL")
+            values["SigningCertUrl"] = values.pop("SigningCertURL", None)
         return values
 
 
