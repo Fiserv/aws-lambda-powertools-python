@@ -614,7 +614,7 @@ class ApiGatewayResolver(BaseRouter):
                 logger.debug("Pre-flight request detected. Returning CORS with null response")
                 headers["Access-Control-Allow-Methods"] = ",".join(sorted(self._cors_methods))
                 return ResponseBuilder(
-                    Response(status_code=204, content_type=None, headers=headers, body=None),
+                    Response(status_code=204, content_type=None, headers=headers, body=""),
                     current_event=self.current_event,
                 )
 
