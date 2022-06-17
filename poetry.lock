@@ -638,8 +638,8 @@ typing-extensions = ">=4.1.0"
 
 [[package]]
 name = "mypy-boto3-secretsmanager"
-version = "1.24.0"
-description = "Type annotations for boto3.SecretsManager 1.24.0 service generated with mypy-boto3-builder 7.6.1"
+version = "1.24.11.post3"
+description = "Type annotations for boto3.SecretsManager 1.24.11 service generated with mypy-boto3-builder 7.7.1"
 category = "dev"
 optional = false
 python-versions = ">=3.6"
@@ -741,6 +741,14 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "py-cpuinfo"
+version = "8.0.0"
+description = "Get CPU info with pure Python 2 & 3"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "pycodestyle"
 version = "2.8.0"
 description = "Python style guide checker"
@@ -837,6 +845,23 @@ pytest = ">=5.4.0"
 
 [package.extras]
 testing = ["coverage", "hypothesis (>=5.7.1)"]
+
+[[package]]
+name = "pytest-benchmark"
+version = "3.4.1"
+description = "A ``pytest`` fixture for benchmarking code. It will group the tests into rounds that are calibrated to the chosen timer."
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[package.dependencies]
+py-cpuinfo = "*"
+pytest = ">=3.8"
+
+[package.extras]
+aspect = ["aspectlib"]
+elasticsearch = ["elasticsearch"]
+histogram = ["pygal", "pygaljs"]
 
 [[package]]
 name = "pytest-cov"
@@ -1101,7 +1126,7 @@ pydantic = ["pydantic", "email-validator"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.2"
-content-hash = "e457c68bd754118733c7ad1c54d389f4aa3b06164d947fae5d682566e202b776"
+content-hash = "08794b1c8c45b03b179cde28a8102eb10221bc556f12a76ae1fbf8ce5ce81c7f"
 
 [metadata.files]
 atomicwrites = [
@@ -1438,8 +1463,8 @@ mypy-boto3-dynamodb = [
     {file = "mypy_boto3_dynamodb-1.24.0-py3-none-any.whl", hash = "sha256:866f0f8ae44e266ea051f57179bf40132d8e89e6fa23abab6e71421b3c0cd794"},
 ]
 mypy-boto3-secretsmanager = [
-    {file = "mypy-boto3-secretsmanager-1.24.0.tar.gz", hash = "sha256:6680c322df031b08ef79fcdb8ffdfb08d57d4925392f641348336926dc5c6b2e"},
-    {file = "mypy_boto3_secretsmanager-1.24.0-py3-none-any.whl", hash = "sha256:7da281c49ae91e60fdbcd0015379ae4cc9dc9ff911836ee78a2652310e09f53e"},
+    {file = "mypy-boto3-secretsmanager-1.24.11.post3.tar.gz", hash = "sha256:f153b3f5ff2c65664a906fb2c97a6598a57da9f1da77679dbaf541051dcff36e"},
+    {file = "mypy_boto3_secretsmanager-1.24.11.post3-py3-none-any.whl", hash = "sha256:d9655d568f7fd8fe05265613b85fba55ab6e4dcd078989af1ef9f0ffe4b45019"},
 ]
 mypy-boto3-ssm = [
     {file = "mypy-boto3-ssm-1.24.0.tar.gz", hash = "sha256:bab58398947c3627a4e7610cd0f57b525c12fd1d0a6bb862400b6af0a4e684fc"},
@@ -1476,6 +1501,9 @@ pluggy = [
 py = [
     {file = "py-1.11.0-py2.py3-none-any.whl", hash = "sha256:607c53218732647dff4acdfcd50cb62615cedf612e72d1724fb1a0cc6405b378"},
     {file = "py-1.11.0.tar.gz", hash = "sha256:51c75c4126074b472f746a24399ad32f6053d1b34b68d2fa41e558e6f4a98719"},
+]
+py-cpuinfo = [
+    {file = "py-cpuinfo-8.0.0.tar.gz", hash = "sha256:5f269be0e08e33fd959de96b34cd4aeeeacac014dd8305f70eb28d06de2345c5"},
 ]
 pycodestyle = [
     {file = "pycodestyle-2.8.0-py2.py3-none-any.whl", hash = "sha256:720f8b39dde8b293825e7ff02c475f3077124006db4f440dcbc9a20b76548a20"},
@@ -1541,6 +1569,10 @@ pytest = [
 pytest-asyncio = [
     {file = "pytest-asyncio-0.16.0.tar.gz", hash = "sha256:7496c5977ce88c34379df64a66459fe395cd05543f0a2f837016e7144391fcfb"},
     {file = "pytest_asyncio-0.16.0-py3-none-any.whl", hash = "sha256:5f2a21273c47b331ae6aa5b36087047b4899e40f03f18397c0e65fa5cca54e9b"},
+]
+pytest-benchmark = [
+    {file = "pytest-benchmark-3.4.1.tar.gz", hash = "sha256:40e263f912de5a81d891619032983557d62a3d85843f9a9f30b98baea0cd7b47"},
+    {file = "pytest_benchmark-3.4.1-py2.py3-none-any.whl", hash = "sha256:36d2b08c4882f6f997fd3126a3d6dfd70f3249cde178ed8bbc0b73db7c20f809"},
 ]
 pytest-cov = [
     {file = "pytest-cov-3.0.0.tar.gz", hash = "sha256:e7f0f5b1617d2210a2cabc266dfe2f4c75a8d32fb89eafb7ad9d06f6d076d470"},
